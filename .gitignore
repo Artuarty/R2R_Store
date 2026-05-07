@@ -1,0 +1,20 @@
+# Compilación
+build/
+*.o
+*.a
+*.out
+*.exe
+
+# Archivos grandes (> 100 MB bloqueados por GitHub)
+*.blend1
+*.fbx
+*.max
+
+# IDEs
+.vscode/
+.idea/
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
