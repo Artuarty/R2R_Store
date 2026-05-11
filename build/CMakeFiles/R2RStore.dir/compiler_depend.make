@@ -7,6 +7,8 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
   /home/arturo/Documentos/R2R_Store/src/Mesh.h \
   /home/arturo/Documentos/R2R_Store/src/Model.h \
   /home/arturo/Documentos/R2R_Store/src/Shader.h \
+  /home/arturo/Documentos/R2R_Store/src/TextureManager.h \
+  /home/arturo/Documentos/R2R_Store/src/TextureReport.h \
   /usr/include/GL/gl.h \
   /usr/include/GL/glew.h \
   /usr/include/GL/glu.h \
@@ -68,6 +70,7 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
   /usr/include/c++/13/bits/cpp_type_traits.h \
   /usr/include/c++/13/bits/cxxabi_forced.h \
   /usr/include/c++/13/bits/cxxabi_init_exception.h \
+  /usr/include/c++/13/bits/enable_special_members.h \
   /usr/include/c++/13/bits/erase_if.h \
   /usr/include/c++/13/bits/exception.h \
   /usr/include/c++/13/bits/exception_defines.h \
@@ -80,6 +83,8 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
   /usr/include/c++/13/bits/functexcept.h \
   /usr/include/c++/13/bits/functional_hash.h \
   /usr/include/c++/13/bits/hash_bytes.h \
+  /usr/include/c++/13/bits/hashtable.h \
+  /usr/include/c++/13/bits/hashtable_policy.h \
   /usr/include/c++/13/bits/invoke.h \
   /usr/include/c++/13/bits/ios_base.h \
   /usr/include/c++/13/bits/istream.tcc \
@@ -122,12 +127,9 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
   /usr/include/c++/13/bits/stl_iterator.h \
   /usr/include/c++/13/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/13/bits/stl_iterator_base_types.h \
-  /usr/include/c++/13/bits/stl_map.h \
-  /usr/include/c++/13/bits/stl_multimap.h \
   /usr/include/c++/13/bits/stl_pair.h \
   /usr/include/c++/13/bits/stl_raw_storage_iter.h \
   /usr/include/c++/13/bits/stl_tempbuf.h \
-  /usr/include/c++/13/bits/stl_tree.h \
   /usr/include/c++/13/bits/stl_uninitialized.h \
   /usr/include/c++/13/bits/stl_vector.h \
   /usr/include/c++/13/bits/streambuf.tcc \
@@ -136,6 +138,7 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
   /usr/include/c++/13/bits/stringfwd.h \
   /usr/include/c++/13/bits/uniform_int_dist.h \
   /usr/include/c++/13/bits/unique_ptr.h \
+  /usr/include/c++/13/bits/unordered_map.h \
   /usr/include/c++/13/bits/uses_allocator.h \
   /usr/include/c++/13/bits/uses_allocator_args.h \
   /usr/include/c++/13/bits/utility.h \
@@ -176,7 +179,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
   /usr/include/c++/13/istream \
   /usr/include/c++/13/limits \
   /usr/include/c++/13/locale \
-  /usr/include/c++/13/map \
   /usr/include/c++/13/math.h \
   /usr/include/c++/13/memory \
   /usr/include/c++/13/new \
@@ -208,6 +210,7 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
   /usr/include/c++/13/tuple \
   /usr/include/c++/13/type_traits \
   /usr/include/c++/13/typeinfo \
+  /usr/include/c++/13/unordered_map \
   /usr/include/c++/13/vector \
   /usr/include/ctype.h \
   /usr/include/endian.h \
@@ -570,6 +573,8 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
+/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
@@ -657,10 +662,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
 
 /usr/include/glm/mat3x3.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/types/error_t.h:
-
-/usr/include/glm/mat2x4.hpp:
 
 /usr/include/glm/mat2x3.hpp:
 
@@ -767,10 +768,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/glm/ext/scalar_int_sized.hpp:
 
 /usr/include/glm/ext/scalar_constants.inl:
-
-/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
-
-/usr/include/glm/ext/scalar_constants.hpp:
 
 /usr/include/glm/ext/quaternion_trigonometric.hpp:
 
@@ -880,6 +877,10 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/glm/detail/type_vec4.hpp:
 
+/usr/include/glm/detail/type_vec3.inl:
+
+/usr/include/glm/detail/type_vec3.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
 
 /usr/include/glm/detail/type_vec2.inl:
@@ -888,13 +889,13 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/stl_iterator_base_types.h:
 
-/usr/include/glm/ext/vector_uint4.hpp:
-
-/usr/include/assimp/mesh.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
 /usr/include/asm-generic/errno.h:
+
+/usr/include/glm/ext/vector_uint4.hpp:
+
+/usr/include/assimp/mesh.h:
 
 /usr/include/glm/geometric.hpp:
 
@@ -903,8 +904,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/c++/13/bits/stl_construct.h:
 
 /usr/include/c++/13/bits/stl_bvector.h:
-
-/usr/include/c++/13/bits/allocator.h:
 
 /usr/include/c++/13/bits/stl_algobase.h:
 
@@ -984,6 +983,12 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/invoke.h:
 
+/usr/include/x86_64-linux-gnu/bits/types/error_t.h:
+
+/usr/include/glm/mat2x4.hpp:
+
+/usr/include/c++/13/bits/hashtable.h:
+
 /usr/include/c++/13/bits/functional_hash.h:
 
 /usr/include/errno.h:
@@ -1018,10 +1023,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/exception_ptr.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
-
-/usr/include/c++/13/bits/stl_multimap.h:
-
 /usr/include/x86_64-linux-gnu/bits/wchar2-decl.h:
 
 /usr/include/glm/ext/vector_double4.hpp:
@@ -1031,6 +1032,14 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/c++/13/bits/erase_if.h:
 
 /usr/include/c++/13/bits/shared_ptr_atomic.h:
+
+/usr/include/c++/13/bits/hashtable_policy.h:
+
+/usr/include/x86_64-linux-gnu/c++/13/bits/ctype_inline.h:
+
+/usr/include/glm/ext/matrix_projection.hpp:
+
+/usr/include/c++/13/bits/char_traits.h:
 
 /usr/include/c++/13/bits/exception.h:
 
@@ -1050,10 +1059,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/cxxabi_forced.h:
 
-/usr/include/c++/13/bits/stl_tempbuf.h:
-
-/usr/include/c++/13/bits/stl_tree.h:
-
 /usr/include/c++/13/bits/codecvt.h:
 
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
@@ -1064,11 +1069,9 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/glm/detail/type_mat3x3.inl:
 
-/usr/include/x86_64-linux-gnu/c++/13/bits/ctype_inline.h:
+/usr/include/c++/13/bits/basic_string.h:
 
-/usr/include/glm/ext/matrix_projection.hpp:
-
-/usr/include/c++/13/bits/char_traits.h:
+/usr/include/c++/13/tr1/poly_laguerre.tcc:
 
 /usr/include/assimp/anim.h:
 
@@ -1090,8 +1093,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/backward/binders.h:
 
-/usr/include/glm/detail/type_vec3.inl:
-
 /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
@@ -1103,12 +1104,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/glm/ext/matrix_double2x4.hpp:
 
 /usr/include/c++/13/climits:
-
-/usr/include/glm/detail/type_mat3x4.hpp:
-
-/usr/include/glm/ext/vector_bool4_precision.hpp:
-
-/usr/include/alloca.h:
 
 /usr/include/glm/ext/matrix_float3x3_precision.hpp:
 
@@ -1124,17 +1119,15 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/asm-generic/errno-base.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h:
-
-/usr/include/assimp/metadata.h:
-
-/usr/include/x86_64-linux-gnu/bits/select2.h:
-
-/usr/include/c++/13/cmath:
-
 /usr/include/glm/ext/vector_bool1.hpp:
 
 /usr/include/assimp/MathFunctions.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
+
+/usr/include/glm/ext/scalar_constants.hpp:
+
+/usr/include/c++/13/bits/enable_special_members.h:
 
 /usr/include/assimp/light.h:
 
@@ -1144,41 +1137,19 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/predefined_ops.h:
 
-/usr/include/assimp/defs.h:
-
-/usr/include/c++/13/bits/align.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
 
 /usr/include/c++/13/bits/unique_ptr.h:
 
 /usr/include/glm/detail/func_matrix.inl:
 
-/usr/include/c++/13/bits/new_allocator.h:
+/usr/include/glm/detail/type_mat2x4.hpp:
 
-/usr/include/c++/13/bits/stl_uninitialized.h:
-
-/usr/include/c++/13/locale:
-
-/usr/include/c++/13/backward/auto_ptr.h:
-
-/usr/include/c++/13/bits/fs_dir.h:
-
-/usr/include/assimp/postprocess.h:
-
-/usr/include/glm/ext/vector_int3_sized.hpp:
-
-/usr/include/assert.h:
+/home/arturo/Documentos/R2R_Store/src/Mesh.h:
 
 /usr/include/c++/13/bits/locale_facets_nonio.tcc:
 
-/usr/include/c++/13/ios:
-
-/home/arturo/Documentos/R2R_Store/examples/stb_image.h:
-
 /usr/include/GL/glew.h:
-
-/usr/include/assimp/matrix4x4.inl:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
 
@@ -1189,6 +1160,36 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/c++/13/ext/numeric_traits.h:
 
 /usr/include/glm/detail/type_mat3x3.hpp:
+
+/usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h:
+
+/usr/include/assimp/metadata.h:
+
+/usr/include/x86_64-linux-gnu/bits/select2.h:
+
+/usr/include/c++/13/cmath:
+
+/usr/include/c++/13/bits/align.h:
+
+/usr/include/assimp/defs.h:
+
+/usr/include/glm/ext/vector_bool4_precision.hpp:
+
+/usr/include/alloca.h:
+
+/usr/include/glm/detail/type_mat3x4.hpp:
+
+/usr/include/glm/ext/vector_int3_sized.hpp:
+
+/usr/include/assert.h:
+
+/usr/include/c++/13/backward/auto_ptr.h:
+
+/usr/include/c++/13/bits/fs_dir.h:
+
+/usr/include/assimp/postprocess.h:
+
+/home/arturo/Documentos/R2R_Store/src/TextureManager.h:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
@@ -1234,6 +1235,10 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/basic_string.tcc:
 
+/home/arturo/Documentos/R2R_Store/examples/stb_image.h:
+
+/usr/include/c++/13/ios:
+
 /usr/include/c++/13/iosfwd:
 
 /usr/include/assimp/matrix3x3.inl:
@@ -1260,19 +1265,15 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/quoted_string.h:
 
+/usr/include/assimp/matrix4x4.inl:
+
+/usr/include/c++/13/bits/unordered_map.h:
+
 /usr/include/glm/ext/quaternion_relational.inl:
 
 /usr/include/assimp/texture.h:
 
 /usr/include/assimp/vector2.h:
-
-/usr/include/c++/13/bits/basic_string.h:
-
-/usr/include/c++/13/tr1/poly_laguerre.tcc:
-
-/home/arturo/Documentos/R2R_Store/src/Mesh.h:
-
-/usr/include/glm/detail/type_mat2x4.hpp:
 
 /usr/include/assimp/vector2.inl:
 
@@ -1328,7 +1329,13 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/basic_ios.h:
 
-/usr/include/glm/detail/type_vec3.hpp:
+/usr/include/c++/13/bits/stl_tempbuf.h:
+
+/usr/include/c++/13/bits/new_allocator.h:
+
+/usr/include/c++/13/bits/stl_uninitialized.h:
+
+/usr/include/c++/13/locale:
 
 /usr/include/c++/13/bits/stl_vector.h:
 
@@ -1446,8 +1453,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/glm/ext/vector_uint3.hpp:
 
-/usr/include/c++/13/map:
-
 /usr/include/c++/13/string_view:
 
 /usr/include/glm/detail/type_quat.inl:
@@ -1470,6 +1475,8 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/assimp/quaternion.h:
 
+/home/arturo/Documentos/R2R_Store/src/TextureReport.h:
+
 /usr/include/c++/13/tr1/legendre_function.tcc:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/limits.h:
@@ -1485,6 +1492,10 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/c++/13/bits/nested_exception.h:
 
 /usr/include/c++/13/tuple:
+
+/usr/include/c++/13/bits/allocator.h:
+
+/usr/include/c++/13/unordered_map:
 
 /usr/include/glm/ext/vector_double1.hpp:
 
@@ -1503,8 +1514,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/math.h:
 
 /usr/include/glm/common.hpp:
-
-/usr/include/c++/13/bits/stl_map.h:
 
 /usr/include/glm/detail/_fixes.hpp:
 
