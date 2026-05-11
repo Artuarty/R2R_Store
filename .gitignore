@@ -1,9 +1,4 @@
-# Compilación
-build/
-*.o
-*.a
-*.out
-*.exe
+
 
 # Archivos grandes (> 100 MB bloqueados por GitHub)
 *.blend1

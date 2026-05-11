@@ -1,0 +1,3 @@
+/home/arturo/Documentos/R2R_Store/build/CMakeFiles/R2RStore.dir
+/home/arturo/Documentos/R2R_Store/build/CMakeFiles/edit_cache.dir
+/home/arturo/Documentos/R2R_Store/build/CMakeFiles/rebuild_cache.dir
