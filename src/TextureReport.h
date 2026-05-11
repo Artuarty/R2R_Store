@@ -4,37 +4,35 @@
 #include <unordered_map>
 #include <fstream>
 #include <iostream>
-#include <algorithm>
 #include <sstream>
 #include <vector>
+#include <cstdio>
 
 /*
- * TextureReport — parser de relatorio_texturas_tienda.txt
+ * TextureReport — parser of relatorio_texturas_tienda.txt
  *
- * Estructura del relatorio:
- *   OBJETO: REF_XXX
- *   MATERIAL: MatName
- *     - [Base Color]: ImageName
- *     - [Alpha]: ImageName       (ignorado — usamos solo Base Color)
- *     - [Normal]: ImageName      (ignorado — shader no usa normal maps)
- *   ..............................
+ * Each object/material entry now yields a MaterialConfig that encodes:
+ *   TEX:<name>  → hasTexture=true,  imageName="<name>" (prefix stripped)
+ *   RGB:<r,g,b> → hasTexture=false, r/g/b filled
+ *   VAL:<float> → treated as gray fallback (Base Color), or sets roughness/metallic
  *
- * Resultado: objName → { matName → imageNameBaseColor }
- * Las claves se almacenan en minúsculas para comparación case-insensitive.
- *
- * Normalización de nombres de objeto:
- *   "REF_Rack_Rack_Refri_2" → "ref_rack_refri_2"   (tokens duplicados eliminados)
- *   "REF_Piso_completo_R2R" → "ref_piso_completo_r2r" (lowercase)
- * Esto permite casar los nombres del relatorio con los stems de los archivos .obj.
+ * Roughness and Metallic VAL: lines are parsed per material block.
  */
 
-// matName (lowercase) → imageName (ej. "Image_0.078")
-using MatTexMap = std::unordered_map<std::string, std::string>;
+struct MaterialConfig {
+    bool        hasTexture = false;
+    std::string imageName;                      // only valid when hasTexture=true
+    float       r = 0.5f, g = 0.5f, b = 0.5f; // solid color when !hasTexture
+    float       roughness = 0.5f;
+    float       metallic  = 0.0f;
+};
 
-// objName normalizado (lowercase, sin tokens duplicados) → MatTexMap
+// matName (lowercase) → MaterialConfig
+using MatTexMap = std::unordered_map<std::string, MaterialConfig>;
+
+// objName normalizado (lowercase, tokens duplicados eliminados) → MatTexMap
 using ObjTexMap = std::unordered_map<std::string, MatTexMap>;
 
-// Convierte a minúsculas.
 inline std::string toLower(std::string s)
 {
     for (char& c : s) c = (char)std::tolower((unsigned char)c);
@@ -42,7 +40,6 @@ inline std::string toLower(std::string s)
 }
 
 // Elimina tokens consecutivos duplicados separados por '_'.
-// "ref_rack_rack_refri_2" → "ref_rack_refri_2"
 inline std::string deduplicateTokens(const std::string& s)
 {
     std::vector<std::string> parts;
@@ -60,13 +57,35 @@ inline std::string deduplicateTokens(const std::string& s)
     return result;
 }
 
-// Normaliza un nombre de objeto para usarlo como clave del mapa.
 inline std::string normalizeObjName(const std::string& name)
 {
     return deduplicateTokens(toLower(name));
 }
 
-// Parsea el relatorio y devuelve el mapa de texturas.
+// Interpreta "TEX:<name>", "RGB:<r>,<g>,<b>", o "VAL:<v>" para Base Color.
+static void parseBaseColor(const std::string& val, MaterialConfig& cfg)
+{
+    if (val.rfind("TEX:", 0) == 0) {
+        cfg.hasTexture = true;
+        cfg.imageName  = val.substr(4);
+    } else if (val.rfind("RGB:", 0) == 0) {
+        cfg.hasTexture = false;
+        std::sscanf(val.c_str() + 4, "%f,%f,%f", &cfg.r, &cfg.g, &cfg.b);
+    }
+    // VAL: → mantener gris por defecto
+}
+
+// Extrae el float de "VAL:<float>", o devuelve defaultVal.
+static float parseValFloat(const std::string& val, float defaultVal)
+{
+    if (val.rfind("VAL:", 0) == 0) {
+        float f = defaultVal;
+        std::sscanf(val.c_str() + 4, "%f", &f);
+        return f;
+    }
+    return defaultVal;
+}
+
 inline ObjTexMap ParseTextureReport(const std::string& reportPath)
 {
     ObjTexMap result;
@@ -76,58 +95,77 @@ inline ObjTexMap ParseTextureReport(const std::string& reportPath)
         return result;
     }
 
-    std::string currentObj, currentMat;
-    std::string line;
+    auto trim = [](std::string& s) {
+        while (!s.empty() && std::isspace((unsigned char)s.back()))  s.pop_back();
+        while (!s.empty() && std::isspace((unsigned char)s.front())) s.erase(s.begin());
+    };
+
+    std::string currentObj, currentMat, line;
 
     while (std::getline(f, line)) {
-        // Elimina \r si el archivo tiene line endings Windows.
         if (!line.empty() && line.back() == '\r') line.pop_back();
 
         if (line.rfind("OBJETO: ", 0) == 0) {
             std::string raw = line.substr(8);
-            while (!raw.empty() && std::isspace((unsigned char)raw.back())) raw.pop_back();
+            trim(raw);
             currentObj = normalizeObjName(raw);
             currentMat.clear();
+            continue;
         }
-        else if (line.rfind("MATERIAL: ", 0) == 0) {
+        if (line.rfind("MATERIAL: ", 0) == 0) {
             std::string raw = line.substr(10);
-            while (!raw.empty() && std::isspace((unsigned char)raw.back())) raw.pop_back();
+            trim(raw);
             currentMat = toLower(raw);
+            continue;
         }
-        else if (line.find("[Base Color]: ") != std::string::npos) {
-            if (currentObj.empty() || currentMat.empty()) continue;
+        if (currentObj.empty() || currentMat.empty()) continue;
 
-            auto pos = line.find("[Base Color]: ");
-            std::string img = line.substr(pos + 14);
-            // Trim espacios
-            while (!img.empty() && std::isspace((unsigned char)img.back()))  img.pop_back();
-            while (!img.empty() && std::isspace((unsigned char)img.front())) img.erase(img.begin());
+        // Extrae el valor después de "[Key]: " en cualquier posición de la línea.
+        auto extractVal = [&](const std::string& key) -> std::string {
+            std::string pat = "[" + key + "]: ";
+            auto pos = line.find(pat);
+            if (pos == std::string::npos) return "";
+            std::string v = line.substr(pos + pat.size());
+            trim(v);
+            return v;
+        };
 
-            // Solo almacena la primera entrada Base Color por (objeto, material).
-            auto& matMap = result[currentObj];
-            if (matMap.find(currentMat) == matMap.end())
-                matMap[currentMat] = img;
+        std::string v;
+        if (!(v = extractVal("Base Color")).empty()) {
+            parseBaseColor(v, result[currentObj][currentMat]);
+        } else if (!(v = extractVal("Roughness")).empty()) {
+            result[currentObj][currentMat].roughness = parseValFloat(v, 0.5f);
+        } else if (!(v = extractVal("Metallic")).empty()) {
+            result[currentObj][currentMat].metallic = parseValFloat(v, 0.0f);
         }
     }
 
     return result;
 }
 
-// Busca la imagen Base Color para (objFileStem, materialName).
-// objFileStem se normaliza antes de buscar.
-// Devuelve "" si no hay entrada en el relatorio.
-inline std::string LookupTexture(const ObjTexMap&   report,
-                                 const std::string& objFileStem,
-                                 const std::string& materialName)
+// Devuelve puntero a MaterialConfig para (objFileStem, materialName), o nullptr si no existe.
+inline const MaterialConfig* LookupMaterial(const ObjTexMap&   report,
+                                             const std::string& objFileStem,
+                                             const std::string& materialName)
 {
     std::string objKey = normalizeObjName(objFileStem);
     std::string matKey = toLower(materialName);
 
     auto objIt = report.find(objKey);
-    if (objIt == report.end()) return "";
+    if (objIt == report.end()) return nullptr;
 
     auto matIt = objIt->second.find(matKey);
-    if (matIt == objIt->second.end()) return "";
+    if (matIt == objIt->second.end()) return nullptr;
 
-    return matIt->second;
+    return &matIt->second;
+}
+
+// Compatibilidad: devuelve solo el imageName si hay TEX:, cadena vacía en caso contrario.
+inline std::string LookupTexture(const ObjTexMap&   report,
+                                 const std::string& objFileStem,
+                                 const std::string& materialName)
+{
+    const MaterialConfig* cfg = LookupMaterial(report, objFileStem, materialName);
+    if (!cfg || !cfg->hasTexture) return "";
+    return cfg->imageName;
 }
