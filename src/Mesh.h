@@ -1,13 +1,10 @@
 #pragma once
 
-#include <string>
 #include <vector>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include "Shader.h"
 
 struct Vertex {
@@ -16,17 +13,19 @@ struct Vertex {
     glm::vec2 TexCoords;
 };
 
+// Una textura cargada en GPU (solo guardamos el ID y la fuente para debug).
 struct Texture {
-    GLuint    id;
-    std::string type;
-    std::string path;
+    GLuint      id   = 0;
+    std::string name; // nombre de imagen del relatorio, ej. "Image_0.078"
 };
 
+// Propiedades Blinn-Phong del material.
+// Sin MTL: diffuse=1 (el color viene de la textura), specular y shininess razonables.
 struct MaterialData {
-    glm::vec3 ambient  = glm::vec3(0.2f);
-    glm::vec3 diffuse  = glm::vec3(0.8f);
-    glm::vec3 specular = glm::vec3(0.1f);
-    glm::vec3 emissive = glm::vec3(0.0f);
+    glm::vec3 ambient   = glm::vec3(0.15f);
+    glm::vec3 diffuse   = glm::vec3(1.00f);
+    glm::vec3 specular  = glm::vec3(0.20f);
+    glm::vec3 emissive  = glm::vec3(0.00f);
     float     shininess = 32.0f;
     float     opacity   = 1.0f;
 };
@@ -36,36 +35,34 @@ class Mesh
 public:
     std::vector<Vertex>  vertices;
     std::vector<GLuint>  indices;
-    std::vector<Texture> textures;
+    Texture              diffuseTex;  // Base Color del relatorio (puede ser id=0 → blanco)
     MaterialData         mat;
 
     Mesh(std::vector<Vertex> v, std::vector<GLuint> i,
-         std::vector<Texture> t, MaterialData m)
-        : vertices(v), indices(i), textures(t), mat(m)
+         Texture t, MaterialData m)
+        : vertices(std::move(v)), indices(std::move(i)),
+          diffuseTex(t), mat(m)
     {
         setupMesh();
     }
 
     void Draw(Shader& shader)
     {
-        // Material colors from MTL
-        shader.setVec3("material.ambient",   mat.ambient);
-        shader.setVec3("material.diffuse",   mat.diffuse);
-        shader.setVec3("material.specular",  mat.specular);
-        shader.setVec3("material.emissive",  mat.emissive);
+        // Propiedades Blinn-Phong
+        shader.setVec3 ("material.ambient",   mat.ambient);
+        shader.setVec3 ("material.diffuse",   mat.diffuse);
+        shader.setVec3 ("material.specular",  mat.specular);
+        shader.setVec3 ("material.emissive",  mat.emissive);
         shader.setFloat("material.shininess", mat.shininess > 0.0f ? mat.shininess : 1.0f);
-        shader.setFloat("material.opacity",  mat.opacity);
+        shader.setFloat("material.opacity",   mat.opacity);
 
-        GLuint diffNr = 1;
-        bool hasTex = !textures.empty();
+        // Textura difusa en unidad 0 → uniform texture_diffuse1
+        bool hasTex = (diffuseTex.id != 0);
         shader.setBool("material.hasTexture", hasTex);
-
-        for (GLuint i = 0; i < textures.size(); i++) {
-            glActiveTexture(GL_TEXTURE0 + i);
-            std::string name = textures[i].type + std::to_string(
-                textures[i].type == "texture_diffuse" ? diffNr++ : 1);
-            shader.setInt(name.c_str(), i);
-            glBindTexture(GL_TEXTURE_2D, textures[i].id);
+        if (hasTex) {
+            glActiveTexture(GL_TEXTURE0);
+            shader.setInt("texture_diffuse1", 0);
+            glBindTexture(GL_TEXTURE_2D, diffuseTex.id);
         }
 
         glBindVertexArray(VAO);
@@ -84,22 +81,29 @@ private:
         glGenBuffers(1, &EBO);
 
         glBindVertexArray(VAO);
+
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
+        glBufferData(GL_ARRAY_BUFFER,
+                     (GLsizei)(vertices.size() * sizeof(Vertex)),
                      vertices.data(), GL_STATIC_DRAW);
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint),
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     (GLsizei)(indices.size() * sizeof(GLuint)),
                      indices.data(), GL_STATIC_DRAW);
 
+        // location 0 — posición
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                              (GLvoid*)offsetof(Vertex, Position));
+                              (void*)offsetof(Vertex, Position));
+        // location 1 — normal
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                              (GLvoid*)offsetof(Vertex, Normal));
+                              (void*)offsetof(Vertex, Normal));
+        // location 2 — UV
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                              (GLvoid*)offsetof(Vertex, TexCoords));
+                              (void*)offsetof(Vertex, TexCoords));
 
         glBindVertexArray(0);
     }
