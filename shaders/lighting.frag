@@ -43,6 +43,7 @@ uniform DirLight   dirLight;
 uniform PointLight pointLights[2];
 uniform vec3       viewPos;
 uniform sampler2D  texture_diffuse1;
+uniform vec3       uBaseColor;        // color sólido para materiales sin textura
 
 // Animaciones de iluminación
 uniform float lampIntensity;      // ANIM_08: 0.85 + variación senoidal
@@ -92,7 +93,7 @@ void main()
 
     vec3 albedo = material.hasTexture
         ? texture(texture_diffuse1, TexCoords).rgb
-        : vec3(1.0);
+        : uBaseColor;
 
     vec3 result = CalcDirLight(dirLight, norm, viewDir, albedo);
     for (int i = 0; i < 2; i++)
