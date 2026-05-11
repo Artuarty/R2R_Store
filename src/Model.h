@@ -2,8 +2,8 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include <iostream>
+#include <filesystem>
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -11,149 +11,139 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-// stb_image — STB_IMAGE_IMPLEMENTATION must be defined before the first include
-// (done in main.cpp before including this header)
-#include "stb_image.h"
-
 #include "Mesh.h"
 #include "Shader.h"
+#include "TextureManager.h"
+#include "TextureReport.h"
 
-GLuint TextureFromFile(const char* path, const std::string& directory)
-{
-    std::string filename = directory + '/' + std::string(path);
-
-    GLuint texID;
-    glGenTextures(1, &texID);
-
-    int w, h, nch;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load(filename.c_str(), &w, &h, &nch, 0);
-    if (data) {
-        GLenum fmt = (nch == 1) ? GL_RED : (nch == 3) ? GL_RGB : GL_RGBA;
-        glBindTexture(GL_TEXTURE_2D, texID);
-        glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    } else {
-        std::cerr << "Texture failed: " << filename << "\n";
-        // 1x1 white fallback
-        unsigned char white[3] = {255, 255, 255};
-        glBindTexture(GL_TEXTURE_2D, texID);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, white);
-    }
-    stbi_image_free(data);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    return texID;
-}
-
+/*
+ * Model — carga un .obj con Assimp e ignora el .mtl.
+ *
+ * Las texturas se obtienen de TextureManager usando el relatorio
+ * relatorio_texturas_tienda.txt:
+ *   1. Se extrae el nombre del objeto del stem del path (ej. "REF_Estante_1").
+ *   2. Por cada mesh se pregunta al aiMaterial su nombre (== usemtl en el OBJ).
+ *   3. Se busca en el relatorio: (objName, matName) → imageName.
+ *   4. TextureManager devuelve el ID GPU (cacheado o cargado en esa llamada).
+ *
+ * Normalización de nombres (case-insensitive, tokens duplicados eliminados):
+ *   "REF_Rack_Rack_Refri_2" → "ref_rack_refri_2"   casa con relatorio "REF_Rack_Refri_2"
+ *   "REF_Piso_completo_R2R" → "ref_piso_completo_r2r" casa con "REF_Piso_completo_r2r"
+ *
+ * Se elimina aiProcess_FlipUVs porque TextureManager ya usa
+ * stbi_set_flip_vertically_on_load(true) para corregir la inversión UV.
+ */
 class Model
 {
 public:
     Model() = default;
-    explicit Model(const std::string& path) { loadModel(path); }
+
+    Model(const std::string& path,
+          TextureManager&    texMgr,
+          const ObjTexMap&   report)
+    {
+        loadModel(path, texMgr, report);
+    }
 
     void Draw(Shader& shader) {
-        for (auto& m : meshes) m.Draw(shader);
+        for (auto& m : meshes_) m.Draw(shader);
     }
 
 private:
-    std::vector<Mesh>    meshes;
-    std::string          directory;
-    std::vector<Texture> textures_loaded;
+    std::vector<Mesh> meshes_;
 
-    void loadModel(const std::string& path)
+    void loadModel(const std::string&  path,
+                   TextureManager&     texMgr,
+                   const ObjTexMap&    report)
     {
         Assimp::Importer imp;
+        // aiProcess_FlipUVs omitido: stbi_set_flip_vertically_on_load corrige el UV.
         const aiScene* scene = imp.ReadFile(path,
-            aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
+            aiProcess_Triangulate | aiProcess_GenSmoothNormals);
 
         if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) {
-            std::cerr << "ASSIMP: " << imp.GetErrorString() << "\n";
+            std::cerr << "[Model] Assimp: " << imp.GetErrorString()
+                      << " (" << path << ")\n";
             return;
         }
-        directory = path.substr(0, path.find_last_of('/'));
-        processNode(scene->mRootNode, scene);
+
+        // Nombre del objeto = stem del archivo, normalizado para lookup en relatorio.
+        std::string objKey = normalizeObjName(
+            std::filesystem::path(path).stem().string());
+
+        processNode(scene->mRootNode, scene, objKey, texMgr, report);
     }
 
-    void processNode(aiNode* node, const aiScene* scene)
+    void processNode(aiNode*            node,
+                     const aiScene*     scene,
+                     const std::string& objKey,
+                     TextureManager&    texMgr,
+                     const ObjTexMap&   report)
     {
-        for (GLuint i = 0; i < node->mNumMeshes; i++)
-            meshes.push_back(processMesh(scene->mMeshes[node->mMeshes[i]], scene));
-        for (GLuint i = 0; i < node->mNumChildren; i++)
-            processNode(node->mChildren[i], scene);
+        for (unsigned i = 0; i < node->mNumMeshes; i++)
+            meshes_.push_back(
+                processMesh(scene->mMeshes[node->mMeshes[i]], scene,
+                            objKey, texMgr, report));
+
+        for (unsigned i = 0; i < node->mNumChildren; i++)
+            processNode(node->mChildren[i], scene, objKey, texMgr, report);
     }
 
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene)
+    Mesh processMesh(aiMesh*            mesh,
+                     const aiScene*     scene,
+                     const std::string& objKey,
+                     TextureManager&    texMgr,
+                     const ObjTexMap&   report)
     {
-        std::vector<Vertex>  vertices;
-        std::vector<GLuint>  indices;
-        std::vector<Texture> textures;
+        // ── Geometría ──────────────────────────────────────────────────────────
+        std::vector<Vertex> vertices;
+        vertices.reserve(mesh->mNumVertices);
 
-        for (GLuint i = 0; i < mesh->mNumVertices; i++) {
+        for (unsigned i = 0; i < mesh->mNumVertices; i++) {
             Vertex v;
-            v.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+            v.Position = { mesh->mVertices[i].x,
+                           mesh->mVertices[i].y,
+                           mesh->mVertices[i].z };
             v.Normal   = mesh->mNormals
-                ? glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z)
-                : glm::vec3(0, 1, 0);
+                ? glm::vec3(mesh->mNormals[i].x,
+                            mesh->mNormals[i].y,
+                            mesh->mNormals[i].z)
+                : glm::vec3(0.0f, 1.0f, 0.0f);
             v.TexCoords = mesh->mTextureCoords[0]
-                ? glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y)
-                : glm::vec2(0);
+                ? glm::vec2(mesh->mTextureCoords[0][i].x,
+                            mesh->mTextureCoords[0][i].y)
+                : glm::vec2(0.0f);
             vertices.push_back(v);
         }
 
-        for (GLuint i = 0; i < mesh->mNumFaces; i++)
-            for (GLuint j = 0; j < mesh->mFaces[i].mNumIndices; j++)
+        std::vector<GLuint> indices;
+        indices.reserve(mesh->mNumFaces * 3u);
+        for (unsigned i = 0; i < mesh->mNumFaces; i++)
+            for (unsigned j = 0; j < mesh->mFaces[i].mNumIndices; j++)
                 indices.push_back(mesh->mFaces[i].mIndices[j]);
 
-        // Material colors from MTL
-        MaterialData mat;
-        if (mesh->mMaterialIndex >= 0) {
-            aiMaterial* m = scene->mMaterials[mesh->mMaterialIndex];
+        // ── Textura desde relatorio ────────────────────────────────────────────
+        Texture diffTex;
+        MaterialData mat; // usa los defaults de MaterialData (sin MTL)
 
-            aiColor3D c;
-            if (AI_SUCCESS == m->Get(AI_MATKEY_COLOR_AMBIENT,  c)) mat.ambient  = {c.r,c.g,c.b};
-            if (AI_SUCCESS == m->Get(AI_MATKEY_COLOR_DIFFUSE,  c)) mat.diffuse  = {c.r,c.g,c.b};
-            if (AI_SUCCESS == m->Get(AI_MATKEY_COLOR_SPECULAR, c)) mat.specular = {c.r,c.g,c.b};
-            if (AI_SUCCESS == m->Get(AI_MATKEY_COLOR_EMISSIVE, c)) mat.emissive = {c.r,c.g,c.b};
+        if (mesh->mMaterialIndex < scene->mNumMaterials) {
+            aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
 
-            float val;
-            if (AI_SUCCESS == m->Get(AI_MATKEY_SHININESS, val)) mat.shininess = val;
-            if (AI_SUCCESS == m->Get(AI_MATKEY_OPACITY,   val)) mat.opacity   = val;
+            // Nombre del material == nombre del usemtl en el OBJ.
+            aiString aiMatName;
+            aiMat->Get(AI_MATKEY_NAME, aiMatName);
+            std::string matKey = toLower(std::string(aiMatName.C_Str()));
 
-            // Load diffuse textures if present
-            auto diffMaps = loadMaterialTextures(m, aiTextureType_DIFFUSE, "texture_diffuse");
-            textures.insert(textures.end(), diffMaps.begin(), diffMaps.end());
-        }
+            // Busca la imagen Base Color en el relatorio.
+            std::string imageName = LookupTexture(report, objKey, matKey);
 
-        return Mesh(vertices, indices, textures, mat);
-    }
-
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat,
-                                               aiTextureType type,
-                                               const std::string& typeName)
-    {
-        std::vector<Texture> textures;
-        for (GLuint i = 0; i < mat->GetTextureCount(type); i++) {
-            aiString str;
-            mat->GetTexture(type, i, &str);
-            std::string p(str.C_Str());
-
-            bool skip = false;
-            for (auto& t : textures_loaded)
-                if (t.path == p) { textures.push_back(t); skip = true; break; }
-
-            if (!skip) {
-                Texture tex;
-                tex.id   = TextureFromFile(str.C_Str(), directory);
-                tex.type = typeName;
-                tex.path = p;
-                textures.push_back(tex);
-                textures_loaded.push_back(tex);
+            if (!imageName.empty()) {
+                diffTex.id   = texMgr.Get(imageName);
+                diffTex.name = imageName;
             }
+            // Si imageName está vacío → diffTex.id = 0 → shader usa vec3(1.0) como albedo.
         }
-        return textures;
+
+        return Mesh(std::move(vertices), std::move(indices), diffTex, mat);
     }
 };
