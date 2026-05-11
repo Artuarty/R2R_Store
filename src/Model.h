@@ -49,6 +49,18 @@ public:
         for (auto& m : meshes_) m.Draw(shader);
     }
 
+    // Dibuja solo meshes opacos (opacity==1 y sin tex-alpha) — PASS 1
+    void DrawOpaque(Shader& shader) {
+        for (auto& m : meshes_)
+            if (!m.isTransparent()) m.Draw(shader);
+    }
+
+    // Dibuja solo meshes transparentes — PASS 2 (blend debe estar activo)
+    void DrawTransparent(Shader& shader) {
+        for (auto& m : meshes_)
+            if (m.isTransparent()) m.Draw(shader);
+    }
+
 private:
     std::vector<Mesh> meshes_;
 
@@ -152,6 +164,27 @@ private:
                 // Metallic → intensidad especular
                 float met = glm::clamp(cfg->metallic, 0.0f, 1.0f);
                 mat.specular = glm::vec3(0.04f + met * 0.56f);
+
+                // Transparencia desde [Alpha]
+                // useTexAlpha SOLO se activa si:
+                //   a) el relatorio marca alphaFromTex (TEX: en Alpha)
+                //   b) el nombre del material contiene "glass" o "transparency"
+                //   c) la textura cargada realmente tiene canal alpha (RGBA o LA)
+                // Esto evita que materiales opacos con alpha en su textura
+                // (estructura exterior, paredes) terminen en el pase transparente.
+                bool isGlassMat = (matKey.find("glass")        != std::string::npos ||
+                                   matKey.find("transparency")  != std::string::npos ||
+                                   matKey.find("transparent")   != std::string::npos);
+
+                if (cfg->alphaFromTex && isGlassMat && diffTex.id != 0) {
+                    mat.useTexAlpha = texMgr.HasAlpha(cfg->imageName);
+                    mat.opacity     = 1.0f;
+                } else if (cfg->opacity < 0.5f) {
+                    // VAL:0.0 = vidrio en Blender → tinte de vidrio sutil en OpenGL
+                    mat.opacity = 0.15f;
+                } else {
+                    mat.opacity = cfg->opacity;
+                }
             }
         }
 

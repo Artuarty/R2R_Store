@@ -20,14 +20,14 @@ struct Texture {
 };
 
 // Propiedades Blinn-Phong del material.
-// Sin MTL: diffuse=1 (el color viene de la textura), specular y shininess razonables.
 struct MaterialData {
-    glm::vec3 ambient   = glm::vec3(0.15f);
-    glm::vec3 diffuse   = glm::vec3(1.00f);
-    glm::vec3 specular  = glm::vec3(0.20f);
-    glm::vec3 emissive  = glm::vec3(0.00f);
-    float     shininess = 32.0f;
-    float     opacity   = 1.0f;
+    glm::vec3 ambient    = glm::vec3(0.15f);
+    glm::vec3 diffuse    = glm::vec3(1.00f);
+    glm::vec3 specular   = glm::vec3(0.20f);
+    glm::vec3 emissive   = glm::vec3(0.00f);
+    float     shininess  = 32.0f;
+    float     opacity    = 1.0f;
+    bool      useTexAlpha = false; // true → shader samplea texture .a para transparencia
 };
 
 class Mesh
@@ -38,6 +38,11 @@ public:
     Texture              diffuseTex;  // Base Color del relatorio (id=0 → sin textura)
     MaterialData         mat;
     glm::vec3            solidColor{0.5f, 0.5f, 0.5f}; // color sólido para materiales RGB:
+
+    // true si este mesh tiene transparencia real (necesita pass 2 con blending)
+    bool isTransparent() const {
+        return mat.opacity < 1.0f || mat.useTexAlpha;
+    }
 
     Mesh(std::vector<Vertex> v, std::vector<GLuint> i,
          Texture t, MaterialData m,
@@ -57,6 +62,9 @@ public:
         shader.setVec3 ("material.emissive",  mat.emissive);
         shader.setFloat("material.shininess", mat.shininess > 0.0f ? mat.shininess : 1.0f);
         shader.setFloat("material.opacity",   mat.opacity);
+
+        // Transparencia: uUseTexAlpha indica al shader que use texture.a
+        shader.setBool("uUseTexAlpha", mat.useTexAlpha);
 
         // Color sólido o textura — siempre se pasa uBaseColor como fallback
         bool hasTex = (diffuseTex.id != 0);

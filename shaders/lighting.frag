@@ -44,6 +44,7 @@ uniform PointLight pointLights[2];
 uniform vec3       viewPos;
 uniform sampler2D  texture_diffuse1;
 uniform vec3       uBaseColor;        // color sólido para materiales sin textura
+uniform bool       uUseTexAlpha;      // true → usar texture.a como alpha del fragmento
 
 // Animaciones de iluminación
 uniform float lampIntensity;      // ANIM_08: 0.85 + variación senoidal
@@ -105,7 +106,18 @@ void main()
     // ANIM_LETRERO: emisivo animado superpuesto
     result += emissiveIntensity * vec3(0.31, 0.76, 0.97);
 
-    float alpha = (alphaOverride >= 0.0) ? alphaOverride : material.opacity;
+    // Alpha final:
+    //  1. alphaOverride activo (ANIM_07 bolsa) → usa ese valor
+    //  2. uUseTexAlpha=true (vidrio con textura alpha, ej. puertas refri) → samplea .a
+    //  3. caso base → material.opacity (0.15 para vidrio VAL:0.0, 1.0 para opacos)
+    float alpha;
+    if (alphaOverride >= 0.0) {
+        alpha = alphaOverride;
+    } else if (uUseTexAlpha && material.hasTexture) {
+        alpha = texture(texture_diffuse1, TexCoords).a;
+    } else {
+        alpha = material.opacity;
+    }
 
     FragColor = vec4(result, alpha);
 }

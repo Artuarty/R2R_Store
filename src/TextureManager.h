@@ -52,9 +52,17 @@ public:
         return id;
     }
 
+    // Devuelve true si la textura tiene canal alpha real (RGBA o LA al cargar).
+    bool HasAlpha(const std::string& imageName) const
+    {
+        auto it = hasAlpha_.find(imageName);
+        return it != hasAlpha_.end() && it->second;
+    }
+
 private:
     std::string                             dir_;
     std::unordered_map<std::string, GLuint> cache_;
+    std::unordered_map<std::string, bool>   hasAlpha_; // true si la imagen tiene alpha real
     GLuint                                  whiteId_ = 0;
 
     // Resuelve el nombre de imagen a un path completo en disco.
@@ -91,20 +99,34 @@ private:
 
         if (path.empty()) {
             std::cerr << "[TextureManager] No se encontró: " << name << "\n";
+            hasAlpha_[name] = false;
             return uploadWhite(id);
         }
 
-        int w, h, ch;
+        int w, h, orig_ch;
         // Corrige V=0: Blender exporta PNG con fila 0 arriba; OpenGL espera fila 0 abajo.
         stbi_set_flip_vertically_on_load(true);
-        unsigned char* data = stbi_load(path.c_str(), &w, &h, &ch, 0);
+        // Primera carga: detecta canales originales (RGB=3, RGBA=4, LA=2, L=1)
+        unsigned char* data = stbi_load(path.c_str(), &w, &h, &orig_ch, 0);
 
         if (!data) {
             std::cerr << "[TextureManager] stbi_load falló: " << path << "\n";
+            hasAlpha_[name] = false;
             return uploadWhite(id);
         }
 
-        GLenum fmt = ch == 1 ? GL_RED : ch == 3 ? GL_RGB : GL_RGBA;
+        // Imágenes LA (Luminance+Alpha, 2 canales) son inválidas para GL_RGBA con 2 bytes/px.
+        // Se recargan con 4 canales forzados para que OpenGL las lea correctamente.
+        if (orig_ch == 2) {
+            stbi_image_free(data);
+            data = stbi_load(path.c_str(), &w, &h, &orig_ch, 4);
+            orig_ch = 4;
+        }
+
+        // Registra si la imagen tiene canal alpha real (original RGBA o LA)
+        hasAlpha_[name] = (orig_ch == 4);
+
+        GLenum fmt = orig_ch == 1 ? GL_RED : orig_ch == 3 ? GL_RGB : GL_RGBA;
         glBindTexture(GL_TEXTURE_2D, id);
         glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -120,9 +142,9 @@ private:
 
     GLuint uploadWhite(GLuint id)
     {
-        unsigned char px[3] = {255, 255, 255};
+        unsigned char px[4] = {255, 255, 255, 255};
         glBindTexture(GL_TEXTURE_2D, id);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, px);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, px);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -136,6 +158,7 @@ private:
             glGenTextures(1, &whiteId_);
             uploadWhite(whiteId_);
             cache_["__white__"] = whiteId_;
+            hasAlpha_["__white__"] = false;
         }
         return whiteId_;
     }

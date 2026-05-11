@@ -20,11 +20,14 @@
  */
 
 struct MaterialConfig {
-    bool        hasTexture = false;
+    bool        hasTexture  = false;
     std::string imageName;                      // only valid when hasTexture=true
     float       r = 0.5f, g = 0.5f, b = 0.5f; // solid color when !hasTexture
-    float       roughness = 0.5f;
-    float       metallic  = 0.0f;
+    float       roughness   = 0.5f;
+    float       metallic    = 0.0f;
+    // [Alpha] channel
+    float       opacity     = 1.0f;  // VAL:0.0=glass(→0.15), VAL:1.0=opaque
+    bool        alphaFromTex = false; // TEX: → sample texture .a in shader
 };
 
 // matName (lowercase) → MaterialConfig
@@ -137,6 +140,13 @@ inline ObjTexMap ParseTextureReport(const std::string& reportPath)
             result[currentObj][currentMat].roughness = parseValFloat(v, 0.5f);
         } else if (!(v = extractVal("Metallic")).empty()) {
             result[currentObj][currentMat].metallic = parseValFloat(v, 0.0f);
+        } else if (!(v = extractVal("Alpha")).empty()) {
+            auto& cfg = result[currentObj][currentMat];
+            if (v.rfind("TEX:", 0) == 0) {
+                cfg.alphaFromTex = true;
+            } else {
+                cfg.opacity = parseValFloat(v, 1.0f);
+            }
         }
     }
 

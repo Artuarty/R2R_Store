@@ -369,143 +369,159 @@ int main(int argc, char* argv[])
         shader.setFloat("pointLights[1].linear",    0.07f);
         shader.setFloat("pointLights[1].quadratic", 0.017f);
 
-        // ── Objetos estáticos — identidad (world space ya baked en OBJ) ───────
-        for (auto& s : statics)
-            drawModel(shader, *s, I);
+        // ─────────────────────────────────────────────────────────────────────
+        // Pre-computar estado de todas las animaciones (usado en ambos passes)
+        // ─────────────────────────────────────────────────────────────────────
 
-        // ── ANIM_01: Puertas refrigerador (automática, cíclica) ───────────────
-        // angle = 45°·(1+sin(t·0.8)) ∈ [0°, 90°]
-        // Rota alrededor de bisagra vertical (eje Y) usando pivote del origen Blender
+        // ANIM_01: puertas refri — angle = 45°·(1+sin(t·0.8)) ∈ [0°,90°]
         float refriAngle = 45.0f * (1.0f + sinf(t * 0.8f));
-        for (int i = 0; i < 8; i++)
-            drawModel(shader, *mdlRefri[i], pivotRotY(refriPivot(i), refriAngle));
 
-        // ── ANIM_02: Puerta de entrada (toggle tecla E) ────────────────────────
-        // Gira Der hacia -Y (se abre a la derecha), Izq hacia +Y (izquierda)
-        drawModel(shader, mdlPuertaDer, pivotRotY(pvDer, -puertaAngle));
-        drawModel(shader, mdlPuertaIzq, pivotRotY(pvIzq,  puertaAngle));
-
-        // ── ANIM_03: Cámara de seguridad (automática) ─────────────────────────
-        // angle = 60°·sin(t·0.5) → paneo oscilante ±60°
+        // ANIM_03: cámara — paneo oscilante ±60°
         float camaraAngle = 60.0f * sinf(t * 0.5f);
-        drawModel(shader, mdlCamaraHead, pivotRotY(pvCamara, camaraAngle));
 
-        // ── ANIM_04: Cajones registradora (toggle tecla R) ────────────────────
-        // offset = 0.15·(1+sin(t·1.2))·0.5 ∈ [0, 0.15] cuando activo
-        // Deslizamiento en +Z (hacia el cliente)
-        {
-            float offset = cajonActivo
-                ? 0.15f * (1.0f + sinf(t * 1.2f)) * 0.5f
-                : 0.0f;
-            drawModel(shader, mdlCajon1, pivotTranslate(glm::vec3(0,0, offset)));
-            drawModel(shader, mdlCajon2, pivotTranslate(glm::vec3(0,0, offset)));
-        }
+        // ANIM_04: cajones — deslizamiento Z cuando activo
+        float offset04 = cajonActivo ? 0.15f * (1.0f + sinf(t * 1.2f)) * 0.5f : 0.0f;
 
-        // ── ANIM_05: Taza de café (automática, ciclo 5s) ──────────────────────
-        // Interpolación por fases con smoothstep cúbico f(t)=t²(3-2t):
-        //   Fase 1 (0.0→0.3): chorro aparece (modelo faltante, solo taza)
-        //   Fase 2 (0.3→0.8): nivel de café sube → translate +Y con smoothstep
-        //   Fase 3 (0.8→1.0): chorro desaparece (taza a nivel lleno)
-        // El smoothstep garantiza velocidad 0 al inicio y fin de cada fase
+        // ANIM_05: taza café — sube en Y con smoothstep cúbico
+        // Fase 1 (0.0→0.3): espera  Fase 2 (0.3→0.8): sube  Fase 3 (0.8→1.0): llena
+        float rise05 = 0.0f;
         {
             float ct = fmodf(t, 5.0f) / 5.0f;
-            float rise = 0.0f;
-            if (ct >= 0.3f && ct <= 0.8f) {
-                float tL = (ct - 0.3f) / 0.5f;
-                rise = 0.06f * smoothstep(tL);
-            } else if (ct > 0.8f) {
-                rise = 0.06f;
-            }
-            drawModel(shader, mdlTazaCafe,
-                      pivotTranslate(glm::vec3(0, rise, 0)));
+            if      (ct >= 0.3f && ct <= 0.8f) rise05 = 0.06f * smoothstep((ct - 0.3f) / 0.5f);
+            else if (ct >  0.8f)               rise05 = 0.06f;
         }
 
-        // ── ANIM_06: Extracción de helado (automática, ciclo 8s) ──────────────
-        // Fases:
-        //   Fase 1 (0.00→0.33): tapa abre → rot X en bisagra trasera con smoothstep
-        //   Fase 2 (0.33→0.66): paleta sube → curva Bézier cúbica con smoothstep
-        //     B(t)=(1-t)³P0+3(1-t)²tP1+3(1-t)t²P2+t³P3
-        //     P0=posición inicial, P3=exterior del contenedor
-        //   Fase 3 (0.66→1.00): tapa cierra, paleta regresa
+        // ANIM_06: helados — tapa (rot X) + paleta (curva Bézier cúbica)
+        // B(t)=(1-t)³P0+3(1-t)²tP1+3(1-t)t²P2+t³P3  con smoothstep por fase
+        float tapaAngle06  = 0.0f;
+        glm::vec3 paletaPos06 = bezP0;
         {
             float ht = fmodf(t, 8.0f) / 8.0f;
-            float tapaAngle = 0.0f;
-            glm::vec3 paletaPos = bezP0;
-
             if (ht < 0.33f) {
-                float tL = ht / 0.33f;
-                tapaAngle = -45.0f * smoothstep(tL);
+                tapaAngle06 = -45.0f * smoothstep(ht / 0.33f);
             } else if (ht < 0.66f) {
                 float tL = (ht - 0.33f) / 0.33f;
-                tapaAngle = -45.0f;
-                paletaPos = bezier3(smoothstep(tL), bezP0, bezP1, bezP2, bezP3);
+                tapaAngle06 = -45.0f;
+                paletaPos06 = bezier3(smoothstep(tL), bezP0, bezP1, bezP2, bezP3);
             } else {
                 float tL = (ht - 0.66f) / 0.34f;
-                tapaAngle = -45.0f * (1.0f - smoothstep(tL));
-                paletaPos = bezier3(1.0f - smoothstep(tL), bezP0, bezP1, bezP2, bezP3);
+                tapaAngle06 = -45.0f * (1.0f - smoothstep(tL));
+                paletaPos06 = bezier3(1.0f - smoothstep(tL), bezP0, bezP1, bezP2, bezP3);
             }
-
-            drawModel(shader, mdlTapa1,   pivotRotX(pvTapa1, tapaAngle));
-            drawModel(shader, mdlPaleta1, pivotTranslate(paletaPos - pvPaleta1));
         }
 
-        // ── ANIM_LETRERO: Logos R2R — neón pulsante ──────────────────────────
-        // E(t) = 0.5(1+sin(2π·0.8·t)) + 0.3(1+sin(2π·2.1·t)) → clamp[0,1]
-        // Superposición de ondas de distinta frecuencia → patrón de latido no lineal
-        {
-            float e = 0.5f*(1.0f + sinf(2.0f*glm::pi<float>()*0.8f*t))
-                    + 0.3f*(1.0f + sinf(2.0f*glm::pi<float>()*2.1f*t));
-            float emissive = glm::clamp(e, 0.0f, 1.0f);
-            drawModel(shader, mdlLogoEntrada, I, emissive);
-            drawModel(shader, mdlLogoPoste,   I, emissive);
+        // ANIM_LETRERO: batimiento de ondas E(t) = 0.5(1+sin(2π·0.8·t)) + 0.3(1+sin(2π·2.1·t))
+        float emissive07 = glm::clamp(
+            0.5f*(1.0f + sinf(2.0f*glm::pi<float>()*0.8f*t)) +
+            0.3f*(1.0f + sinf(2.0f*glm::pi<float>()*2.1f*t)),
+            0.0f, 1.0f);
+
+        // ANIM_07: máquina de hielo — compuerta + bolsa
+        // Fases: apertura(0→0.25), bolsa sale(0.25→0.70), reposo(0.70→0.85), cierre(0.85→1.0)
+        // Smoothstep cúbico: f(t)=t²(3-2t) → velocidad 0 en extremos (arranque/frenado suave)
+        float nt07 = hieloTimer / 5.0f;
+        float puertaAng07 = 0.0f;
+        if      (nt07 <= 0.25f) puertaAng07 = -90.0f * smoothstep(nt07 / 0.25f);
+        else if (nt07 <= 0.85f) puertaAng07 = -90.0f;
+        else                    puertaAng07 = -90.0f * (1.0f - smoothstep((nt07 - 0.85f) / 0.15f));
+
+        // Posición bolsa (Δy con gravedad: ½·g·tL² — cinemática newtoniana)
+        glm::vec3 bPos07 = bolsaInit;
+        if (nt07 > 0.25f) {
+            if (nt07 <= 0.70f) {
+                float tL   = (nt07 - 0.25f) / 0.45f;
+                float ease = smoothstep(tL);
+                bPos07.z = lerp(bolsaInit.z, bolsaFinal.z, ease);
+                bPos07.y = lerp(bolsaInit.y, bolsaFinal.y, ease);
+                bPos07.y += 0.5f * (-9.8f * 0.015f) * tL * tL;
+            } else {
+                bPos07 = bolsaFinal;
+            }
         }
 
-        // ── ANIM_07: Máquina de hielo — render transparente AL FINAL ──────────
-        // DEBE renderizarse después de todos los opacos para que gl_BLEND sea correcto
-        //
-        // Fases (t ∈ [0,1], ciclo 5 segundos):
-        //   Fase 1 (0.00→0.25): compuerta rota 0° → -90° (cae hacia afuera)
-        //     angle = -90°·smoothstep(tL)
-        //   Fase 2 (0.25→0.70): bolsa desliza hacia afuera con smoothstep + gravedad
-        //     pos.z  = lerp(init.z, final.z, smoothstep(tL))
-        //     Δpos.y = ½·g·tL²  (g=-9.8·escala, cinemática newtoniana)
-        //              simula el peso real de la bolsa al caer
-        //   Fase 3 (0.70→0.85): bolsa en reposo visible, compuerta abierta
-        //   Fase 4 (0.85→1.00): compuerta regresa a 0° (smoothstep inverso)
+        // ─────────────────────────────────────────────────────────────────────
+        // Helper: configura uniforms y despacha opaco o transparente
+        // ─────────────────────────────────────────────────────────────────────
+        auto draw = [&](bool trans, Model& m, const glm::mat4& xf,
+                        float em = 0.0f, float al = -1.0f)
         {
-            float nt = hieloTimer / 5.0f;  // t ∈ [0,1]
+            shader.setMat4  ("model",             xf);
+            shader.setFloat ("emissiveIntensity", em);
+            shader.setFloat ("alphaOverride",     al);
+            if (trans) m.DrawTransparent(shader);
+            else       m.DrawOpaque(shader);
+        };
 
-            // Compuerta rota alrededor de eje X (bisagra inferior, Origin en pivote)
-            float puertaAng = 0.0f;
-            if      (nt <= 0.25f) puertaAng = -90.0f * smoothstep(nt / 0.25f);
-            else if (nt <= 0.85f) puertaAng = -90.0f;
-            else                  puertaAng = -90.0f * (1.0f - smoothstep((nt - 0.85f) / 0.15f));
+        // Lambda que agrupa todos los draw-calls de la escena en un pase
+        // 'trans=false' → meshes opacos   'trans=true' → meshes transparentes
+        auto renderScene = [&](bool trans)
+        {
+            // Estáticos (world space baked en OBJ → identidad)
+            for (auto& s : statics)
+                draw(trans, *s, I);
 
-            drawModel(shader, mdlHieloPuerta, pivotRotX(pvHieloPuerta, puertaAng));
+            // ANIM_01 — puertas refrigerador (rot Y alrededor de bisagra)
+            for (int i = 0; i < 8; i++)
+                draw(trans, *mdlRefri[i], pivotRotY(refriPivot(i), refriAngle));
 
-            // Bolsa: visible solo desde fase 2
-            if (nt > 0.25f) {
-                glm::vec3 bPos = bolsaInit;
-                if (nt <= 0.70f) {
-                    float tL   = (nt - 0.25f) / 0.45f;
-                    float ease = smoothstep(tL);
-                    bPos.z = lerp(bolsaInit.z, bolsaFinal.z, ease);
-                    bPos.y = lerp(bolsaInit.y, bolsaFinal.y, ease);
-                    // Gravedad: Δy = ½·g·tL² (g reducido para escala de escena)
-                    bPos.y += 0.5f * (-9.8f * 0.015f) * tL * tL;
-                } else {
-                    bPos = bolsaFinal;
-                }
+            // ANIM_02 — puerta de entrada (toggle E)
+            draw(trans, mdlPuertaDer, pivotRotY(pvDer, -puertaAngle));
+            draw(trans, mdlPuertaIzq, pivotRotY(pvIzq,  puertaAngle));
 
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            // ANIM_03 — cámara de seguridad
+            draw(trans, mdlCamaraHead, pivotRotY(pvCamara, camaraAngle));
 
-                drawModel(shader, mdlHieloBolsa,
-                          pivotTranslate(bPos - bolsaInit),
-                          0.0f, 0.85f);
+            // ANIM_04 — cajones registradora (toggle R)
+            draw(trans, mdlCajon1, pivotTranslate(glm::vec3(0, 0, offset04)));
+            draw(trans, mdlCajon2, pivotTranslate(glm::vec3(0, 0, offset04)));
 
-                glDisable(GL_BLEND);
-            }
+            // ANIM_05 — taza de café
+            draw(trans, mdlTazaCafe, pivotTranslate(glm::vec3(0, rise05, 0)));
+
+            // ANIM_06 — helados: tapa y paleta
+            draw(trans, mdlTapa1,   pivotRotX(pvTapa1, tapaAngle06));
+            draw(trans, mdlPaleta1, pivotTranslate(paletaPos06 - pvPaleta1));
+
+            // ANIM_LETRERO — logos R2R neón pulsante
+            draw(trans, mdlLogoEntrada, I, emissive07);
+            draw(trans, mdlLogoPoste,   I, emissive07);
+
+            // ANIM_07 — compuerta de hielo (la bolsa se maneja en PASS 3)
+            draw(trans, mdlHieloPuerta, pivotRotX(pvHieloPuerta, puertaAng07));
+        };
+
+        // ═════════════════════════════════════════════════════════════════════
+        // PASS 1 — OPACOS: depth R/W, blend OFF
+        // ═════════════════════════════════════════════════════════════════════
+        renderScene(false);
+
+        // ═════════════════════════════════════════════════════════════════════
+        // PASS 2 — TRANSPARENTES: depth lectura-only, blend ON
+        // Objetos con vidrio: ventanas, puertas, tapas helados, puertas refri
+        // glDepthMask(GL_FALSE) evita que el vidrio bloquee objetos detrás
+        // ═════════════════════════════════════════════════════════════════════
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthMask(GL_FALSE);
+
+        renderScene(true);
+
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);
+
+        // ═════════════════════════════════════════════════════════════════════
+        // PASS 3 — Bolsa de hielo semitransparente (alpha=0.85 por override)
+        // Debe ir AL FINAL: se renderiza sobre todo lo ya visible
+        // ═════════════════════════════════════════════════════════════════════
+        if (nt07 > 0.25f) {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            drawModel(shader, mdlHieloBolsa,
+                      pivotTranslate(bPos07 - bolsaInit),
+                      0.0f, 0.85f);
+
+            glDisable(GL_BLEND);
         }
 
         glfwSwapBuffers(win);
