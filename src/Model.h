@@ -122,28 +122,39 @@ private:
             for (unsigned j = 0; j < mesh->mFaces[i].mNumIndices; j++)
                 indices.push_back(mesh->mFaces[i].mIndices[j]);
 
-        // ── Textura desde relatorio ────────────────────────────────────────────
-        Texture diffTex;
-        MaterialData mat; // usa los defaults de MaterialData (sin MTL)
+        // ── Material desde relatorio ──────────────────────────────────────────
+        Texture      diffTex;
+        MaterialData mat;
+        glm::vec3    solidColor(0.5f); // gris por defecto si no hay entrada en relatorio
 
         if (mesh->mMaterialIndex < scene->mNumMaterials) {
             aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
 
-            // Nombre del material == nombre del usemtl en el OBJ.
             aiString aiMatName;
             aiMat->Get(AI_MATKEY_NAME, aiMatName);
             std::string matKey = toLower(std::string(aiMatName.C_Str()));
 
-            // Busca la imagen Base Color en el relatorio.
-            std::string imageName = LookupTexture(report, objKey, matKey);
+            const MaterialConfig* cfg = LookupMaterial(report, objKey, matKey);
+            if (cfg) {
+                if (cfg->hasTexture) {
+                    // TEX: → cargar imagen (nombre ya sin prefijo)
+                    diffTex.id   = texMgr.Get(cfg->imageName);
+                    diffTex.name = cfg->imageName;
+                } else {
+                    // RGB: → color sólido; diffTex.id permanece 0
+                    solidColor = glm::vec3(cfg->r, cfg->g, cfg->b);
+                }
 
-            if (!imageName.empty()) {
-                diffTex.id   = texMgr.Get(imageName);
-                diffTex.name = imageName;
+                // Roughness → shininess (cuadrático inverso)
+                float rgh = glm::clamp(cfg->roughness, 0.0f, 1.0f);
+                mat.shininess = glm::max(1.0f, (1.0f - rgh) * (1.0f - rgh) * 128.0f);
+
+                // Metallic → intensidad especular
+                float met = glm::clamp(cfg->metallic, 0.0f, 1.0f);
+                mat.specular = glm::vec3(0.04f + met * 0.56f);
             }
-            // Si imageName está vacío → diffTex.id = 0 → shader usa vec3(1.0) como albedo.
         }
 
-        return Mesh(std::move(vertices), std::move(indices), diffTex, mat);
+        return Mesh(std::move(vertices), std::move(indices), diffTex, mat, solidColor);
     }
 };
