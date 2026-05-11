@@ -33,6 +33,8 @@
 
 #include "Shader.h"
 #include "Camera.h"
+#include "TextureManager.h"
+#include "TextureReport.h"
 #include "Model.h"
 
 namespace fs = std::filesystem;
@@ -164,11 +166,17 @@ int main(int argc, char* argv[])
 
     Shader shader(shd + "lighting.vert", shd + "lighting.frag");
 
+    // ── Gestor de texturas + relatorio ────────────────────────────────────────
+    std::string texDir  = (root / "textures").string();
+    std::string repPath = (root / "relatorio_texturas_tienda.txt").string();
+    TextureManager texMgr(texDir);
+    ObjTexMap      texReport = ParseTextureReport(repPath);
+
     // ── Modelos estáticos ─────────────────────────────────────────────────────
     // Los OBJ ya tienen vértices en world space. Se renderizan con identidad.
     std::vector<std::unique_ptr<Model>> statics;
     auto addS = [&](const std::string& f) {
-        statics.emplace_back(std::make_unique<Model>(mdl + f));
+        statics.emplace_back(std::make_unique<Model>(mdl + f, texMgr, texReport));
     };
 
     addS("REF_Estructura_tienda_completa_R2R.obj");
@@ -219,10 +227,14 @@ int main(int argc, char* argv[])
     // ── ANIM_01: Puertas refrigerador ─────────────────────────────────────────
     // Pivotes: origen Blender → OBJ(X, ESCENA_Z, -ESCENA_Y)
     // Todas comparten ESCENA_Z=1.7057 (altura de bisagra) y ESCENA_X=5.7682
-    Model mdlR1(mdl+"REF_Refri_Puerta_1.obj"), mdlR2(mdl+"REF_Refri_Puerta_2.obj"),
-          mdlR3(mdl+"REF_Refri_Puerta_3.obj"), mdlR4(mdl+"REF_Refri_Puerta_4.obj"),
-          mdlR5(mdl+"REF_Refri_Puerta_5.obj"), mdlR6(mdl+"REF_Refri_Puerta_6.obj"),
-          mdlR7(mdl+"REF_Refri_Puerta_7.obj"), mdlR8(mdl+"REF_Refri_Puerta_8.obj");
+    Model mdlR1(mdl+"REF_Refri_Puerta_1.obj",texMgr,texReport),
+          mdlR2(mdl+"REF_Refri_Puerta_2.obj",texMgr,texReport),
+          mdlR3(mdl+"REF_Refri_Puerta_3.obj",texMgr,texReport),
+          mdlR4(mdl+"REF_Refri_Puerta_4.obj",texMgr,texReport),
+          mdlR5(mdl+"REF_Refri_Puerta_5.obj",texMgr,texReport),
+          mdlR6(mdl+"REF_Refri_Puerta_6.obj",texMgr,texReport),
+          mdlR7(mdl+"REF_Refri_Puerta_7.obj",texMgr,texReport),
+          mdlR8(mdl+"REF_Refri_Puerta_8.obj",texMgr,texReport);
     Model* mdlRefri[] = {&mdlR1,&mdlR2,&mdlR3,&mdlR4,&mdlR5,&mdlR6,&mdlR7,&mdlR8};
 
     // ESCENA: (5.7682, refriY[i], 1.7057) → OBJ pivot (5.7682, 1.7057, -refriY[i])
@@ -233,33 +245,32 @@ int main(int argc, char* argv[])
 
     // ── ANIM_02: Puerta de entrada ────────────────────────────────────────────
     // ESCENA Der:(0.3599,-2.7559,1.8163)  Izq:(-1.6287,-2.7753,1.8163)
-    Model mdlPuertaDer(mdl+"REF_Puerta_princ_Der.obj");
-    Model mdlPuertaIzq(mdl+"REF_Puerta_princ_Izq.obj");
+    Model mdlPuertaDer(mdl+"REF_Puerta_princ_Der.obj",texMgr,texReport);
+    Model mdlPuertaIzq(mdl+"REF_Puerta_princ_Izq.obj",texMgr,texReport);
     glm::vec3 pvDer = blenderToOBJ( 0.3599f,-2.7559f, 1.8163f);
     glm::vec3 pvIzq = blenderToOBJ(-1.6287f,-2.7753f, 1.8163f);
 
     // ── ANIM_03: Cámara de seguridad ──────────────────────────────────────────
     // ESCENA: (-3.8878, 3.6584, 3.5431)
-    Model mdlCamaraHead(mdl+"REF_Camara_Head.obj");
+    Model mdlCamaraHead(mdl+"REF_Camara_Head.obj",texMgr,texReport);
     glm::vec3 pvCamara = blenderToOBJ(-3.8878f, 3.6584f, 3.5431f);
 
     // ── ANIM_04: Cajones registradora ─────────────────────────────────────────
     // ESCENA Cajon1:(-3.5052,-0.3321,1.9916)  Cajon2:(-2.0572,-0.9243,1.9916)
     // Deslizamiento en OBJ +Z (hacia el cliente)
-    Model mdlCajon1(mdl+"REF_Caja1_Cajon.obj");
-    Model mdlCajon2(mdl+"REF_Caja2_Cajon.obj");
-    // Los cajones son estáticos salvo la traslación Z
+    Model mdlCajon1(mdl+"REF_Caja1_Cajon.obj",texMgr,texReport);
+    Model mdlCajon2(mdl+"REF_Caja2_Cajon.obj",texMgr,texReport);
 
     // ── ANIM_05: Taza de café ─────────────────────────────────────────────────
     // ESCENA TazaCafe:(-1.5279,3.8887,1.6889)
     // Fase 2: nivel sube en OBJ +Y (altura)
-    Model mdlTazaCafe(mdl+"REF_Taza_Cafe.obj");
+    Model mdlTazaCafe(mdl+"REF_Taza_Cafe.obj",texMgr,texReport);
     glm::vec3 pvTaza = blenderToOBJ(-1.5279f, 3.8887f, 1.6889f);
 
     // ── ANIM_06: Extracción de helado (Bézier cúbica) ─────────────────────────
     // ESCENA Tapa1:(-0.0749,4.0513,1.5434)  Paleta1:(0.3965,3.8992,1.5323)
-    Model mdlTapa1  (mdl+"REF_Helados1_Tapa.obj");
-    Model mdlPaleta1(mdl+"REF_Paletas_1.obj");
+    Model mdlTapa1  (mdl+"REF_Helados1_Tapa.obj",texMgr,texReport);
+    Model mdlPaleta1(mdl+"REF_Paletas_1.obj",    texMgr,texReport);
     glm::vec3 pvTapa1   = blenderToOBJ(-0.0749f, 4.0513f, 1.5434f);
     glm::vec3 pvPaleta1 = blenderToOBJ( 0.3965f, 3.8992f, 1.5323f);
     // Puntos de control Bézier (espacio OBJ/world):
@@ -271,16 +282,16 @@ int main(int argc, char* argv[])
 
     // ── ANIM_07: Máquina de hielo ─────────────────────────────────────────────
     // ESCENA Puerta:(-3.2104,2.4565,1.8957)  Bolsa:(-3.4436,2.0144,1.8423)
-    Model mdlHieloPuerta(mdl+"REF_Hielo_Puerta.obj");
-    Model mdlHieloBolsa (mdl+"REF_Hielo_Bolsa.obj");
+    Model mdlHieloPuerta(mdl+"REF_Hielo_Puerta.obj",texMgr,texReport);
+    Model mdlHieloBolsa (mdl+"REF_Hielo_Bolsa.obj", texMgr,texReport);
     glm::vec3 pvHieloPuerta = blenderToOBJ(-3.2104f, 2.4565f, 1.8957f);
     glm::vec3 bolsaInit     = blenderToOBJ(-3.4436f, 2.0144f, 1.8423f);
     // Posición final: la bolsa sale hacia afuera (+Z) y cae ligeramente (-Y)
     glm::vec3 bolsaFinal    = bolsaInit + glm::vec3(0.0f, -0.15f, 0.6f);
 
     // ── ANIM_LETRERO: Logos R2R emisivos ─────────────────────────────────────
-    Model mdlLogoEntrada(mdl+"REF_Logo_Tienda_Entrada_Principal.obj");
-    Model mdlLogoPoste  (mdl+"REF_Logo_poste_R2R.obj");
+    Model mdlLogoEntrada(mdl+"REF_Logo_Tienda_Entrada_Principal.obj",texMgr,texReport);
+    Model mdlLogoPoste  (mdl+"REF_Logo_poste_R2R.obj",              texMgr,texReport);
 
     // ── Proyección ────────────────────────────────────────────────────────────
     glm::mat4 proj = glm::perspective(
