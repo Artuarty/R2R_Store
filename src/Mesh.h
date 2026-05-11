@@ -35,13 +35,15 @@ class Mesh
 public:
     std::vector<Vertex>  vertices;
     std::vector<GLuint>  indices;
-    Texture              diffuseTex;  // Base Color del relatorio (puede ser id=0 → blanco)
+    Texture              diffuseTex;  // Base Color del relatorio (id=0 → sin textura)
     MaterialData         mat;
+    glm::vec3            solidColor{0.5f, 0.5f, 0.5f}; // color sólido para materiales RGB:
 
     Mesh(std::vector<Vertex> v, std::vector<GLuint> i,
-         Texture t, MaterialData m)
+         Texture t, MaterialData m,
+         glm::vec3 color = glm::vec3(0.5f))
         : vertices(std::move(v)), indices(std::move(i)),
-          diffuseTex(t), mat(m)
+          diffuseTex(t), mat(m), solidColor(color)
     {
         setupMesh();
     }
@@ -56,9 +58,11 @@ public:
         shader.setFloat("material.shininess", mat.shininess > 0.0f ? mat.shininess : 1.0f);
         shader.setFloat("material.opacity",   mat.opacity);
 
-        // Textura difusa en unidad 0 → uniform texture_diffuse1
+        // Color sólido o textura — siempre se pasa uBaseColor como fallback
         bool hasTex = (diffuseTex.id != 0);
         shader.setBool("material.hasTexture", hasTex);
+        shader.setVec3("uBaseColor", solidColor);
+
         if (hasTex) {
             glActiveTexture(GL_TEXTURE0);
             shader.setInt("texture_diffuse1", 0);
