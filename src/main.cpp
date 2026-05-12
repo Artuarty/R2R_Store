@@ -1,0 +1,761 @@
+/*
+ * R2R Store — Proyecto académico OpenGL 3.3 Core Profile
+ *
+ * Los archivos OBJ tienen vértices en WORLD SPACE (transformaciones de
+ * Blender ya aplicadas en la exportación con Forward:-Z Up:Y).
+ * Sistema de coordenadas: OBJ_X = Blender_X,
+ *                         OBJ_Y = Blender_Z (altura),
+ *                         OBJ_Z = -Blender_Y (profundidad, negado).
+ * Las posiciones de ESCENA.md son los orígenes Blender de cada objeto
+ * y se usan SOLO como pivotes para animaciones (T·R·T⁻¹).
+ *
+ * Controles:
+ *   WASD / Flechas → mover cámara    Mouse → apuntar
+ *   1              → toggle puertas refrigerador (ANIM_01)
+ *   E              → toggle puerta entrada (ANIM_02)
+ *   C              → toggle animación cafetera/café (ANIM_05)
+ *   H              → toggle extracción helado (ANIM_06)
+ *   I              → toggle ciclo máquina de hielo (ANIM_07)
+ *   R              → toggle cajón caja registradora (ANIM_04)
+ *   ESC            → salir
+ */
+
+#define STB_IMAGE_IMPLEMENTATION
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <filesystem>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <memory>
+#include <cmath>
+
+#include "Shader.h"
+#include "Camera.h"
+#include "TextureManager.h"
+#include "TextureReport.h"
+#include "Model.h"
+#include "ProceduralMesh.h"
+
+namespace fs = std::filesystem;
+
+// ─── Prototipos ───────────────────────────────────────────────────────────────
+void KeyCallback   (GLFWwindow*, int, int, int, int);
+void MouseCallback (GLFWwindow*, double, double);
+void DoMovement    ();
+void UpdateAnims   (float dt);
+
+// ─── Ventana ─────────────────────────────────────────────────────────────────
+const GLuint WIDTH = 1280, HEIGHT = 720;
+int SCREEN_W, SCREEN_H;
+
+// ─── Cámara ───────────────────────────────────────────────────────────────────
+// Posición inicial: entrada de la tienda — Z=4 (fuera) mirando hacia -Z (dentro)
+Camera camera(glm::vec3(0.0f, 1.7f, 4.0f),
+              glm::vec3(0.0f, 1.0f, 0.0f),
+              -90.0f, 0.0f);
+
+GLfloat lastX = WIDTH  / 2.0f;
+GLfloat lastY = HEIGHT / 2.0f;
+bool    firstMouse = true;
+bool    keys[1024] = {};
+GLfloat deltaTime = 0.0f;
+GLfloat lastFrame = 0.0f;
+
+// ─── Estado de animaciones ────────────────────────────────────────────────────
+bool  refriAbierta    = false;   // ANIM_01  tecla 1
+float refriAngle      = 0.0f;
+bool  refriPrev       = false;
+
+bool  puertaAbierta   = false;   // ANIM_02  tecla E
+float puertaAngle     = 0.0f;
+bool  puertaPrev      = false;
+
+bool  cajonActivo     = false;   // ANIM_04  tecla R
+bool  cajonPrev       = false;
+
+bool  cafetActiva     = false;   // ANIM_05  tecla C
+float cafetTimer      = 0.0f;   // segundos [0, 5)
+bool  cafetPrev       = false;
+
+bool  heladoActivo    = false;   // ANIM_06  tecla H
+float heladoTimer6    = 0.0f;   // segundos [0, 8)
+bool  heladoPrev      = false;
+
+bool  hieloActivo     = false;   // ANIM_07  tecla I (toggle on/off ciclo)
+float hieloTimer      = 0.0f;   // segundos [0, 5)
+bool  hieloPrev       = false;
+
+// ─── Helpers matemáticos ─────────────────────────────────────────────────────
+
+// Smoothstep cúbico: f(t) = t²(3−2t), t ∈ [0,1]
+// Garantiza velocidad 0 en extremos: derivada f'(t)=6t(1−t), máximo en t=0.5
+// Evita discontinuidades de velocidad en transiciones de fase
+inline float smoothstep(float t) {
+    t = glm::clamp(t, 0.0f, 1.0f);
+    return t * t * (3.0f - 2.0f * t);
+}
+
+inline float lerp(float a, float b, float t) { return a + t * (b - a); }
+
+// Bézier cúbica: B(t) = (1-t)³P0 + 3(1-t)²tP1 + 3(1-t)t²P2 + t³P3
+// Parametriza la trayectoria de la paleta de helado como arco suave
+// P0=inicio, P1/P2=control (arco natural), P3=fin
+inline glm::vec3 bezier3(float t,
+                          glm::vec3 P0, glm::vec3 P1,
+                          glm::vec3 P2, glm::vec3 P3)
+{
+    float u = 1.0f - t;
+    return u*u*u*P0 + 3.0f*u*u*t*P1 + 3.0f*u*t*t*P2 + t*t*t*P3;
+}
+
+// Convierte origen Blender (ESCENA.md) a pivote en espacio OBJ/OpenGL:
+//   OBJ_X = Blender_X,  OBJ_Y = Blender_Z,  OBJ_Z = -Blender_Y
+inline glm::vec3 blenderToOBJ(float bx, float by, float bz) {
+    return glm::vec3(bx, bz, -by);
+}
+
+// ─── Draw helpers ─────────────────────────────────────────────────────────────
+
+void drawModel(Shader& sh, Model& m, const glm::mat4& t,
+               float emissive = 0.0f, float alpha = -1.0f)
+{
+    sh.setMat4("model", t);
+    sh.setFloat("emissiveIntensity", emissive);
+    sh.setFloat("alphaOverride",     alpha);
+    m.Draw(sh);
+}
+
+// Rotación animada alrededor de un pivote en world space
+// Patrón: T(pivot) · R · T(-pivot)
+inline glm::mat4 pivotRotY(glm::vec3 pivot, float angleDeg) {
+    return glm::translate(glm::mat4(1.0f), pivot)
+         * glm::rotate(glm::mat4(1.0f), glm::radians(angleDeg), glm::vec3(0,1,0))
+         * glm::translate(glm::mat4(1.0f), -pivot);
+}
+
+inline glm::mat4 pivotRotX(glm::vec3 pivot, float angleDeg) {
+    return glm::translate(glm::mat4(1.0f), pivot)
+         * glm::rotate(glm::mat4(1.0f), glm::radians(angleDeg), glm::vec3(1,0,0))
+         * glm::translate(glm::mat4(1.0f), -pivot);
+}
+
+// Rotación sobre eje Z en torno a un pivote (compuerta de máquina de hielo)
+// -90° hace caer el tope de la compuerta hacia +X (hacia el interior de la tienda)
+inline glm::mat4 pivotRotZ(glm::vec3 pivot, float angleDeg) {
+    return glm::translate(glm::mat4(1.0f), pivot)
+         * glm::rotate(glm::mat4(1.0f), glm::radians(angleDeg), glm::vec3(0,0,1))
+         * glm::translate(glm::mat4(1.0f), -pivot);
+}
+
+inline glm::mat4 pivotTranslate(glm::vec3 offset) {
+    return glm::translate(glm::mat4(1.0f), offset);
+}
+
+// Escala en Y desde un pivote (chorro de café crece hacia abajo desde la boquilla)
+inline glm::mat4 pivotScaleY(glm::vec3 pivot, float sy) {
+    return glm::translate(glm::mat4(1.0f), pivot)
+         * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, sy, 1.0f))
+         * glm::translate(glm::mat4(1.0f), -pivot);
+}
+
+// ─── main ─────────────────────────────────────────────────────────────────────
+int main(int argc, char* argv[])
+{
+    // Rutas dinámicas desde el ejecutable (regla: sin rutas absolutas)
+    fs::path root    = fs::canonical(fs::path(argv[0]).parent_path()).parent_path();
+    std::string mdl  = (root / "models").string()  + "/";
+    std::string shd  = (root / "shaders").string() + "/";
+
+    // ── GLFW ─────────────────────────────────────────────────────────────────
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+    GLFWwindow* win = glfwCreateWindow(WIDTH, HEIGHT, "R2R Store", nullptr, nullptr);
+    if (!win) { glfwTerminate(); return EXIT_FAILURE; }
+
+    glfwMakeContextCurrent(win);
+    glfwGetFramebufferSize(win, &SCREEN_W, &SCREEN_H);
+    glfwSetKeyCallback(win, KeyCallback);
+    glfwSetCursorPosCallback(win, MouseCallback);
+    glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    // ── GLEW ─────────────────────────────────────────────────────────────────
+    glewExperimental = GL_TRUE;
+    if (GLEW_OK != glewInit()) { return EXIT_FAILURE; }
+
+    glViewport(0, 0, SCREEN_W, SCREEN_H);
+    glEnable(GL_DEPTH_TEST);
+
+    Shader shader(shd + "lighting.vert", shd + "lighting.frag");
+
+    // ── Gestor de texturas + relatorio ────────────────────────────────────────
+    std::string texDir  = (root / "textures").string();
+    std::string repPath = (root / "relatorio_texturas_tienda.txt").string();
+    TextureManager texMgr(texDir);
+    ObjTexMap      texReport = ParseTextureReport(repPath);
+
+    // ── Modelos estáticos ─────────────────────────────────────────────────────
+    // Los OBJ ya tienen vértices en world space. Se renderizan con identidad.
+    std::vector<std::unique_ptr<Model>> statics;
+    auto addS = [&](const std::string& f) {
+        statics.emplace_back(std::make_unique<Model>(mdl + f, texMgr, texReport));
+    };
+
+    addS("REF_Estructura_tienda_completa_R2R.obj");
+    addS("REF_Piso_completo_R2R.obj");
+    addS("REF_Pared_Refrigeradores.obj");
+    addS("REF_Pared_Trasera.obj");           // Rot_X=180° ya baked en OBJ
+    addS("REF_Trabe_Techo.obj");
+    addS("REF_Vidrio_Ventana_1.obj");
+    addS("REF_Vidrio_Ventana_2.obj");
+    addS("REF_Rack_Bebidas.obj");
+    addS("REF_Rack_Cigarros.obj");
+    addS("REF_Estante_1.obj");
+    addS("REF_Estante_2.obj");
+    addS("REF_Mostrador.obj");
+    addS("REF_Rack_Rack_Refri_1.obj");
+    addS("REF_Rack_Rack_Refri_2.obj");
+    addS("REF_Rack_Rack_Refri_3.obj");
+    addS("REF_Rack_Rack_Refri_4.obj");
+    addS("REF_Rack_Rack_Refri_5.obj");
+    addS("REF_Rack_Rack_Refri_6.obj");
+    // REF_Rack_Refri_7 no existe en models/
+    addS("REF_Rack_Rack_Refri_8.obj");
+    addS("REF_Lampara_1.obj");               // ANIM_08 — modelo estático, luz animada
+    addS("REF_Lampara_2.obj");
+    addS("REF_Folleto_R2R_1.obj"); addS("REF_Folleto_R2R_2.obj");
+    addS("REF_Folleto_R2R_3.obj"); addS("REF_Folleto_R2R_4.obj");
+    addS("REF_Folleto_R2R_5.obj"); addS("REF_Folleto_R2R_6.obj");
+    addS("REF_Folleto_R2R_7.obj"); addS("REF_Folleto_R2R_8.obj");
+    addS("REF_Folleto_R2R_9.obj");
+    addS("REF_Cartel_Wanted.obj");
+    addS("REF_Mueble_Cafetera1.obj");  addS("REF_Mueble_Cafetera2.obj");
+    addS("REF_Cafetera1_Body.obj");    addS("REF_Cafetera2_Body.obj");
+    addS("REF_Cafetera1_Boquilla_1.obj"); addS("REF_Cafetera1_Boquilla_2.obj");
+    addS("REF_Cafetera1_Boquilla_3.obj"); addS("REF_Cafetera2_Boquilla_1.obj");
+    addS("REF_Cafetera2_Boquilla_2.obj"); addS("REF_Cafetera2_Boquilla_3.obj");
+    addS("REF_Taza_Cafetera1_1.obj"); addS("REF_Taza_Cafetera1_2.obj");
+    addS("REF_Taza_Cafetera2_1.obj"); addS("REF_Taza_Cafetera2_2.obj");
+    addS("REF_Varios_Cafetera2.obj");
+    addS("REF_Helados1_Body.obj");    addS("REF_Helados2_Body.obj");
+    addS("REF_Helados2_Tapa.obj");
+    addS("REF_Paletas_2.obj");
+    addS("REF_Hielo_Body.obj");
+    addS("REF_Caja1_Body.obj");       addS("REF_Caja2_Body.obj");
+    addS("REF_Camara_Soporte.obj");
+    addS("REF_Poste_R2R.obj");
+    addS("REF_Basura.obj");
+
+    // ── ANIM_01: Puertas refrigerador ─────────────────────────────────────────
+    // Pivotes: origen Blender → OBJ(X, ESCENA_Z, -ESCENA_Y)
+    // Todas comparten ESCENA_Z=1.7057 (altura de bisagra) y ESCENA_X=5.7682
+    Model mdlR1(mdl+"REF_Refri_Puerta_1.obj",texMgr,texReport),
+          mdlR2(mdl+"REF_Refri_Puerta_2.obj",texMgr,texReport),
+          mdlR3(mdl+"REF_Refri_Puerta_3.obj",texMgr,texReport),
+          mdlR4(mdl+"REF_Refri_Puerta_4.obj",texMgr,texReport),
+          mdlR5(mdl+"REF_Refri_Puerta_5.obj",texMgr,texReport),
+          mdlR6(mdl+"REF_Refri_Puerta_6.obj",texMgr,texReport),
+          mdlR7(mdl+"REF_Refri_Puerta_7.obj",texMgr,texReport),
+          mdlR8(mdl+"REF_Refri_Puerta_8.obj",texMgr,texReport);
+    Model* mdlRefri[] = {&mdlR1,&mdlR2,&mdlR3,&mdlR4,&mdlR5,&mdlR6,&mdlR7,&mdlR8};
+
+    // ESCENA: (5.7682, refriY[i], 1.7057) → OBJ pivot (5.7682, 1.7057, -refriY[i])
+    const float refriY[] = {4.1769f,3.4085f,2.6401f,1.8717f,0.1242f,-0.6442f,-1.4126f,-2.1810f};
+    auto refriPivot = [&](int i) {
+        return blenderToOBJ(5.7682f, refriY[i], 1.7057f);
+    };
+
+    // ── ANIM_02: Puerta de entrada ────────────────────────────────────────────
+    // ESCENA Der:(0.3599,-2.7559,1.8163)  Izq:(-1.6287,-2.7753,1.8163)
+    Model mdlPuertaDer(mdl+"REF_Puerta_princ_Der.obj",texMgr,texReport);
+    Model mdlPuertaIzq(mdl+"REF_Puerta_princ_Izq.obj",texMgr,texReport);
+    glm::vec3 pvDer = blenderToOBJ( 0.3599f,-2.7559f, 1.8163f);
+    glm::vec3 pvIzq = blenderToOBJ(-1.6287f,-2.7753f, 1.8163f);
+
+    // ── ANIM_03: Cámara de seguridad ──────────────────────────────────────────
+    // ESCENA: (-3.8878, 3.6584, 3.5431)
+    Model mdlCamaraHead(mdl+"REF_Camara_Head.obj",texMgr,texReport);
+    glm::vec3 pvCamara = blenderToOBJ(-3.8878f, 3.6584f, 3.5431f);
+
+    // ── ANIM_04: Cajones registradora ─────────────────────────────────────────
+    // ESCENA Cajon1:(-3.5052,-0.3321,1.9916)  Cajon2:(-2.0572,-0.9243,1.9916)
+    // Deslizamiento en OBJ +Z (hacia el cliente)
+    Model mdlCajon1(mdl+"REF_Caja1_Cajon.obj",texMgr,texReport);
+    Model mdlCajon2(mdl+"REF_Caja2_Cajon.obj",texMgr,texReport);
+
+    // ── ANIM_05: Taza de café ─────────────────────────────────────────────────
+    // ESCENA TazaCafe:(-1.5279,3.8887,1.6889)
+    // Fase 2: nivel sube en OBJ +Y (altura)
+    Model mdlTazaCafe(mdl+"REF_Taza_Cafe.obj",texMgr,texReport);
+    glm::vec3 pvTaza = blenderToOBJ(-1.5279f, 3.8887f, 1.6889f);
+
+    // ── ANIM_06: Extracción de helado (Bézier cúbica) ─────────────────────────
+    // ESCENA Tapa1:(-0.0749,4.0513,1.5434)  Paleta1:(0.3965,3.8992,1.5323)
+    Model mdlTapa1  (mdl+"REF_Helados1_Tapa.obj",texMgr,texReport);
+    Model mdlPaleta1(mdl+"REF_Paletas_1.obj",    texMgr,texReport);
+    glm::vec3 pvTapa1   = blenderToOBJ(-0.0749f, 4.0513f, 1.5434f);
+    glm::vec3 pvPaleta1 = blenderToOBJ( 0.3965f, 3.8992f, 1.5323f);
+    // Puntos de control Bézier (espacio OBJ/world):
+    // P0=dentro del contenedor, P3=fuera (hacia el cliente)
+    glm::vec3 bezP0 = pvPaleta1;
+    glm::vec3 bezP1 = pvPaleta1 + glm::vec3(0.0f,  0.25f,  0.0f);
+    glm::vec3 bezP2 = pvPaleta1 + glm::vec3(0.15f, 0.45f,  0.2f);
+    glm::vec3 bezP3 = pvPaleta1 + glm::vec3(0.15f, 0.45f,  0.5f);
+
+    // ── ANIM_07: Máquina de hielo ─────────────────────────────────────────────
+    // ESCENA Puerta:(-3.2104,2.4565,1.8957)  Bolsa:(-3.4436,2.0144,1.8423)
+    // La máquina está en la pared izquierda (X≈-3.7) con la puerta hacia el interior (+X)
+    // La compuerta rota sobre eje Z con -90° → el tope cae hacia +X (afuera de la pared)
+    Model mdlHieloPuerta(mdl+"REF_Hielo_Puerta.obj",texMgr,texReport);
+    Model mdlHieloBolsa (mdl+"REF_Hielo_Bolsa.obj", texMgr,texReport);
+    glm::vec3 pvHieloPuerta = blenderToOBJ(-3.2104f, 2.4565f, 1.8957f);
+    glm::vec3 bolsaInit     = blenderToOBJ(-3.4436f, 2.0144f, 1.8423f);
+    // Posición final: la bolsa sale hacia +X (interior de tienda, frente de la máquina)
+    glm::vec3 bolsaFinal    = bolsaInit + glm::vec3(0.8f, -0.10f, 0.0f);
+
+    // ── ANIM_LETRERO: Logos R2R emisivos ─────────────────────────────────────
+    Model mdlLogoEntrada(mdl+"REF_Logo_Tienda_Entrada_Principal.obj",texMgr,texReport);
+    Model mdlLogoPoste  (mdl+"REF_Logo_poste_R2R.obj",              texMgr,texReport);
+
+    // ── Objetos procedurales (geometría generada por código) ─────────────────
+    // 7 objetos únicos modelados con VAO/VBO/EBO sin cargar ningún OBJ externo.
+    // Centrados en el origen; se posicionan con glm::translate en el draw.
+    // Coordenadas en OBJ world space: Y=arriba, Z=-profundidad_Blender.
+
+    // 1. Caja de cereal — Estante_1 (pared derecha, pasillo interior)
+    //    76mm × 220mm × 46mm — caja de cereal estándar vista de frente
+    Mesh procCereal = makeBox(0.038f, 0.110f, 0.023f,
+                              glm::vec3(0.92f, 0.48f, 0.08f)); // naranja
+
+    // 2. Lata de refresco — Rack_Bebidas (pared izquierda)
+    //    r=34mm, h=122mm — lata 355ml estándar
+    Mesh procLata = makeCylinder(0.034f, 0.122f, 16,
+                                 glm::vec3(0.82f, 0.08f, 0.10f)); // rojo
+
+    // 3. Botella de agua — Estante_2 (pasillo central)
+    //    r=25mm, h=220mm — botella PET 500ml
+    Mesh procBotella = makeCylinder(0.025f, 0.220f, 14,
+                                    glm::vec3(0.68f, 0.87f, 0.95f)); // azul claro
+
+    // 4. Bolsa de snacks — Estante_1 (junto a la caja de cereal)
+    //    140mm × 200mm × 40mm — bolsa de papas fritas
+    Mesh procSnack = makeBox(0.070f, 0.100f, 0.020f,
+                             glm::vec3(0.95f, 0.82f, 0.08f)); // amarillo
+
+    // 5. Felpudo de entrada — suelo en la puerta principal
+    //    1000mm × 16mm × 500mm — felpudo industrial de tienda
+    Mesh procFelpudo = makeBox(0.500f, 0.008f, 0.250f,
+                               glm::vec3(0.22f, 0.08f, 0.08f),  // rojo oscuro
+                               16.0f, glm::vec3(0.05f));
+
+    // 6. Cartel de oferta — señalética luminosa cerca de los estantes
+    //    350mm × 250mm × 10mm — cartel de precio/promoción con glow animado
+    Mesh procCartel = makeBox(0.175f, 0.125f, 0.005f,
+                              glm::vec3(0.95f, 0.88f, 0.05f),   // amarillo brillante
+                              8.0f, glm::vec3(0.60f));
+
+    // 7. Revistas/periódicos — mostrador de la caja registradora
+    //    210mm × 40mm × 280mm — pila de revistas A4 apiladas
+    Mesh procRevistas = makeBox(0.105f, 0.020f, 0.140f,
+                                glm::vec3(0.90f, 0.90f, 0.88f)); // blanco/gris
+
+    // ── Proyección ────────────────────────────────────────────────────────────
+    glm::mat4 proj = glm::perspective(
+        glm::radians(camera.GetZoom()),
+        (float)SCREEN_W / (float)SCREEN_H, 0.1f, 100.0f);
+
+    // ── Bucle principal ───────────────────────────────────────────────────────
+    const glm::mat4 I(1.0f);   // identidad para objetos sin transformación
+
+    while (!glfwWindowShouldClose(win))
+    {
+        float t = (float)glfwGetTime();
+        deltaTime = t - lastFrame;
+        lastFrame = t;
+
+        glfwPollEvents();
+        DoMovement();
+
+        // Toggles con detección de flanco
+        auto toggleOn = [&](int key, bool& prev) -> bool {
+            bool cur = keys[key];
+            bool trig = cur && !prev;
+            prev = cur;
+            return trig;
+        };
+        if (toggleOn(GLFW_KEY_1, refriPrev))   refriAbierta  = !refriAbierta;
+        if (toggleOn(GLFW_KEY_E, puertaPrev))  puertaAbierta = !puertaAbierta;
+        if (toggleOn(GLFW_KEY_R, cajonPrev))   cajonActivo   = !cajonActivo;
+        if (toggleOn(GLFW_KEY_C, cafetPrev))   cafetActiva   = !cafetActiva;
+        if (toggleOn(GLFW_KEY_H, heladoPrev))  heladoActivo  = !heladoActivo;
+        if (toggleOn(GLFW_KEY_I, hieloPrev))   hieloActivo   = !hieloActivo;
+
+        UpdateAnims(deltaTime);
+
+        // ── Clear ─────────────────────────────────────────────────────────────
+        glClearColor(0.05f, 0.07f, 0.10f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        shader.Use();
+
+        glm::mat4 view = camera.GetViewMatrix();
+        shader.setMat4("view",       view);
+        shader.setMat4("projection", proj);
+        shader.setVec3("viewPos",    camera.GetPosition());
+
+        // ── Luz direccional (sol exterior) ────────────────────────────────────
+        shader.setVec3("dirLight.direction", glm::vec3(-0.5f,-1.0f,-0.3f));
+        shader.setVec3("dirLight.ambient",   glm::vec3(0.05f, 0.07f, 0.10f));
+        shader.setVec3("dirLight.diffuse",   glm::vec3(1.0f,  0.98f, 0.95f));
+        shader.setVec3("dirLight.specular",  glm::vec3(0.3f,  0.3f,  0.3f));
+
+        // ── ANIM_08: Lámparas del techo — parpadeo suave ─────────────────────
+        // I(t) = 0.85 + 0.1·sin(1.3t) + 0.05·sin(3.7t)
+        // Superposición de dos frecuencias → variación no periódica suave
+        float lampI = 0.85f + 0.10f*sinf(1.3f*t) + 0.05f*sinf(3.7f*t);
+        shader.setFloat("lampIntensity", lampI);
+
+        const glm::vec3 lampClr(1.0f, 0.97f, 0.88f);  // blanco cálido
+        // Lámparas ya en world space (OBJ_Y = ESCENA_Z, OBJ_Z = -ESCENA_Y)
+        // ESCENA Lampara1:(-0.7389, 0.4617, 3.6875) → OBJ(-0.7389, 3.6875, -0.4617)
+        // ESCENA Lampara2:( 2.9418, 0.4617, 3.6875) → OBJ( 2.9418, 3.6875, -0.4617)
+        glm::vec3 lPos0 = blenderToOBJ(-0.7389f, 0.4617f, 3.6875f);
+        glm::vec3 lPos1 = blenderToOBJ( 2.9418f, 0.4617f, 3.6875f);
+
+        shader.setVec3 ("pointLights[0].position",  lPos0);
+        shader.setVec3 ("pointLights[0].ambient",   lampClr * 0.05f);
+        shader.setVec3 ("pointLights[0].diffuse",   lampClr);
+        shader.setVec3 ("pointLights[0].specular",  lampClr * 0.3f);
+        shader.setFloat("pointLights[0].constant",  1.0f);
+        shader.setFloat("pointLights[0].linear",    0.07f);
+        shader.setFloat("pointLights[0].quadratic", 0.017f);
+
+        shader.setVec3 ("pointLights[1].position",  lPos1);
+        shader.setVec3 ("pointLights[1].ambient",   lampClr * 0.05f);
+        shader.setVec3 ("pointLights[1].diffuse",   lampClr);
+        shader.setVec3 ("pointLights[1].specular",  lampClr * 0.3f);
+        shader.setFloat("pointLights[1].constant",  1.0f);
+        shader.setFloat("pointLights[1].linear",    0.07f);
+        shader.setFloat("pointLights[1].quadratic", 0.017f);
+
+        // ── Luz cafetera: cálido dorado que ilumina la barra de cafeteras ────
+        // Posición: sobre el mostrador de cafeteras, a altura de trabajo
+        // Color cálido (naranja-dorado) para realzar los tonos marrones del café
+        const glm::vec3 cafLightClr(1.0f, 0.72f, 0.30f);
+        glm::vec3 cafLightPos = blenderToOBJ(-2.2f, 4.0f, 2.4f);
+        shader.setVec3 ("pointLights[2].position",  cafLightPos);
+        shader.setVec3 ("pointLights[2].ambient",   cafLightClr * 0.20f);
+        shader.setVec3 ("pointLights[2].diffuse",   cafLightClr * 0.90f);
+        shader.setVec3 ("pointLights[2].specular",  cafLightClr * 0.40f);
+        shader.setFloat("pointLights[2].constant",  1.0f);
+        shader.setFloat("pointLights[2].linear",    0.22f);
+        shader.setFloat("pointLights[2].quadratic", 0.20f);
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Pre-computar estado de todas las animaciones (usado en ambos passes)
+        // ─────────────────────────────────────────────────────────────────────
+
+        // ANIM_01: puertas refri — toggle con tecla 1; lerp suave hacia target
+        // Puertas 1-4 (i<4) abren en sentido -Y (negativo); 5-8 en +Y
+
+        // ANIM_03: cámara — paneo oscilante ±60°
+        float camaraAngle = 60.0f * sinf(t * 0.5f);
+
+        // ANIM_04: cajones — deslizamiento Z cuando activo
+        float offset04 = cajonActivo ? 0.15f * (1.0f + sinf(t * 1.2f)) * 0.5f : 0.0f;
+
+        // ANIM_05: taza café — activa con tecla C; smoothstep cúbico
+        // Fase 1 (0→0.3): chorro aparece (escala Y del chorro 0→1)
+        // Fase 2 (0.3→0.8): taza sube mientras el café cae
+        // Fase 3 (0.8→1.0): chorro desaparece, taza llena
+        // Fase 1 (0→0.3): glow aparece     Fase 2 (0.3→0.8): taza sube
+        // Fase 3 (0.8→1.0): glow desaparece, taza en posición llena
+        float rise05   = 0.0f;
+        float tazaGlow = 0.0f;   // emisivo marrón cálido durante el servicio
+        if (cafetActiva) {
+            float ct = fmodf(cafetTimer, 5.0f) / 5.0f;
+            if (ct < 0.3f) {
+                tazaGlow = smoothstep(ct / 0.3f) * 0.4f;
+            } else if (ct <= 0.8f) {
+                rise05   = 0.12f * smoothstep((ct - 0.3f) / 0.5f);
+                tazaGlow = 0.5f;
+            } else {
+                float fade = smoothstep((ct - 0.8f) / 0.2f);
+                rise05   = 0.12f;
+                tazaGlow = (1.0f - fade) * 0.4f;
+            }
+        }
+
+        // ANIM_06: helados — activa con tecla H; tapa (rot X) + paleta (Bézier cúbica)
+        // B(t)=(1-t)³P0+3(1-t)²tP1+3(1-t)t²P2+t³P3  con smoothstep por fase
+        float tapaAngle06     = 0.0f;
+        glm::vec3 paletaPos06 = bezP0;
+        if (heladoActivo) {
+            float ht = fmodf(heladoTimer6, 8.0f) / 8.0f;
+            if (ht < 0.33f) {
+                tapaAngle06 = -45.0f * smoothstep(ht / 0.33f);
+            } else if (ht < 0.66f) {
+                float tL = (ht - 0.33f) / 0.33f;
+                tapaAngle06 = -45.0f;
+                paletaPos06 = bezier3(smoothstep(tL), bezP0, bezP1, bezP2, bezP3);
+            } else {
+                float tL = (ht - 0.66f) / 0.34f;
+                tapaAngle06 = -45.0f * (1.0f - smoothstep(tL));
+                paletaPos06 = bezier3(1.0f - smoothstep(tL), bezP0, bezP1, bezP2, bezP3);
+            }
+        }
+
+        // ANIM_LETRERO: batimiento de ondas E(t) = 0.5(1+sin(2π·0.8·t)) + 0.3(1+sin(2π·2.1·t))
+        float emissive07 = glm::clamp(
+            0.5f*(1.0f + sinf(2.0f*glm::pi<float>()*0.8f*t)) +
+            0.3f*(1.0f + sinf(2.0f*glm::pi<float>()*2.1f*t)),
+            0.0f, 1.0f);
+
+        // ANIM_07: máquina de hielo — compuerta (pivotRotZ -90°) + bolsa sale por +X
+        // Fases: apertura(0→0.25), bolsa sale(0.25→0.70), reposo(0.70→0.85), cierre(0.85→1.0)
+        // Smoothstep cúbico: f(t)=t²(3-2t) → velocidad 0 en extremos
+        float nt07 = hieloActivo ? (hieloTimer / 5.0f) : 0.0f;
+        float puertaAng07 = 0.0f;
+        if      (nt07 <= 0.25f) puertaAng07 = -90.0f * smoothstep(nt07 / 0.25f);
+        else if (nt07 <= 0.85f) puertaAng07 = -90.0f;
+        else                    puertaAng07 = -90.0f * (1.0f - smoothstep((nt07 - 0.85f) / 0.15f));
+
+        // Posición bolsa: desliza en +X (frente de la máquina) con gravedad en Y
+        // lerp3 sobre las 3 componentes; componente Y adiciona caída gravitacional
+        glm::vec3 bPos07 = bolsaInit;
+        if (nt07 > 0.25f && hieloActivo) {
+            if (nt07 <= 0.70f) {
+                float tL   = (nt07 - 0.25f) / 0.45f;
+                float ease = smoothstep(tL);
+                bPos07.x = lerp(bolsaInit.x, bolsaFinal.x, ease);
+                bPos07.y = lerp(bolsaInit.y, bolsaFinal.y, ease);
+                bPos07.z = lerp(bolsaInit.z, bolsaFinal.z, ease);
+                // Gravedad newtoniana: Δy = ½·g·tL²  (g=-9.8, escala 0.015)
+                bPos07.y += 0.5f * (-9.8f * 0.015f) * tL * tL;
+            } else {
+                bPos07 = bolsaFinal;
+            }
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Helper: configura uniforms y despacha opaco o transparente
+        // ─────────────────────────────────────────────────────────────────────
+        // Color base del emisivo: azul R2R para letrero, marrón cálido para café
+        const glm::vec3 emR2R (0.31f, 0.76f, 0.97f);  // neón azul R2R
+        const glm::vec3 emCafe(0.80f, 0.40f, 0.05f);  // marrón cálido café
+
+        auto draw = [&](bool trans, Model& m, const glm::mat4& xf,
+                        float em = 0.0f, float al = -1.0f,
+                        glm::vec3 emColor = glm::vec3(0.31f, 0.76f, 0.97f))
+        {
+            shader.setMat4  ("model",             xf);
+            shader.setFloat ("emissiveIntensity", em);
+            shader.setFloat ("alphaOverride",     al);
+            shader.setVec3  ("uEmissiveColor",    emColor);
+            if (trans) m.DrawTransparent(shader);
+            else       m.DrawOpaque(shader);
+        };
+
+        // Lambda que agrupa todos los draw-calls de la escena en un pase
+        // 'trans=false' → meshes opacos   'trans=true' → meshes transparentes
+        auto renderScene = [&](bool trans)
+        {
+            // Estáticos (world space baked en OBJ → identidad)
+            for (auto& s : statics)
+                draw(trans, *s, I);
+
+            // ANIM_01 — puertas refrigerador (rot Y alrededor de bisagra)
+            // Puertas 1-4 (i<4): ángulo negativo (abren hacia -Y)
+            // Puertas 5-8 (i≥4): ángulo positivo (abren hacia +Y)
+            for (int i = 0; i < 8; i++) {
+                float ang = (i < 4) ? -refriAngle : refriAngle;
+                draw(trans, *mdlRefri[i], pivotRotY(refriPivot(i), ang));
+            }
+
+            // ANIM_02 — puerta de entrada (toggle E)
+            draw(trans, mdlPuertaDer, pivotRotY(pvDer, -puertaAngle));
+            draw(trans, mdlPuertaIzq, pivotRotY(pvIzq,  puertaAngle));
+
+            // ANIM_03 — cámara de seguridad
+            draw(trans, mdlCamaraHead, pivotRotY(pvCamara, camaraAngle));
+
+            // ANIM_04 — cajones registradora (toggle R)
+            draw(trans, mdlCajon1, pivotTranslate(glm::vec3(0, 0, offset04)));
+            draw(trans, mdlCajon2, pivotTranslate(glm::vec3(0, 0, offset04)));
+
+            // ANIM_05 — taza de café con glow cálido cuando se sirve
+            draw(trans, mdlTazaCafe,
+                 pivotTranslate(glm::vec3(0, rise05, 0)),
+                 tazaGlow, -1.0f, emCafe);
+
+            // ANIM_06 — helados: tapa y paleta
+            draw(trans, mdlTapa1,   pivotRotX(pvTapa1, tapaAngle06));
+            draw(trans, mdlPaleta1, pivotTranslate(paletaPos06 - pvPaleta1));
+
+            // ANIM_LETRERO — logos R2R neón pulsante (color azul R2R)
+            draw(trans, mdlLogoEntrada, I, emissive07, -1.0f, emR2R);
+            draw(trans, mdlLogoPoste,   I, emissive07, -1.0f, emR2R);
+
+            // ANIM_07 — compuerta de hielo (pivotRotZ: cae hacia +X = frente de la máquina)
+            draw(trans, mdlHieloPuerta, pivotRotZ(pvHieloPuerta, puertaAng07));
+        };
+
+        // ═════════════════════════════════════════════════════════════════════
+        // PASS 1 — OPACOS: depth R/W, blend OFF
+        // ═════════════════════════════════════════════════════════════════════
+        renderScene(false);
+
+        // ── Objetos procedurales (opacos, dibujados en PASS 1) ───────────────
+        // Lambda: configura model+emissive y despacha el Mesh directamente.
+        // emissiveIntensity=0 para opacos sin glow; el cartel tiene pulsación.
+        {
+            auto drawProc = [&](Mesh& m, glm::vec3 pos,
+                                float em = 0.0f,
+                                glm::vec3 emColor = glm::vec3(0.0f))
+            {
+                shader.setMat4 ("model",             glm::translate(glm::mat4(1.0f), pos));
+                shader.setFloat("emissiveIntensity", em);
+                shader.setFloat("alphaOverride",     -1.0f);
+                shader.setVec3 ("uEmissiveColor",    emColor);
+                m.Draw(shader);
+            };
+
+            // 1. Caja de cereal — Estante_1, primer estante desde el suelo
+            drawProc(procCereal,   glm::vec3( 2.30f, 0.90f, -1.90f));
+            // 2. Lata de refresco — Rack_Bebidas, nivel medio
+            drawProc(procLata,     glm::vec3(-3.50f, 2.20f,  0.80f));
+            // 3. Botella de agua — Estante_2, segundo nivel
+            drawProc(procBotella,  glm::vec3( 2.10f, 1.18f,  0.65f));
+            // 4. Bolsa de snacks — Estante_1, junto a cereal
+            drawProc(procSnack,    glm::vec3( 2.55f, 0.90f, -1.90f));
+            // 5. Felpudo — suelo frente a la puerta de entrada
+            drawProc(procFelpudo,  glm::vec3(-0.60f, 0.67f,  2.75f));
+            // 6. Cartel de oferta — colgado frente a los estantes (pulsación senoidal)
+            //    E(t) = 0.30 + 0.20·sin(1.5t) → variación suave de glow
+            float cartelEm = 0.30f + 0.20f * sinf(1.5f * t);
+            drawProc(procCartel,   glm::vec3( 1.50f, 1.65f, -0.50f),
+                     cartelEm, glm::vec3(0.95f, 0.88f, 0.05f));
+            // 7. Revistas/periódicos — encima del mostrador de caja
+            drawProc(procRevistas, glm::vec3(-2.80f, 1.50f,  0.25f));
+        }
+
+        // ═════════════════════════════════════════════════════════════════════
+        // PASS 2 — TRANSPARENTES: depth lectura-only, blend ON
+        // Objetos con vidrio: ventanas, puertas, tapas helados, puertas refri
+        // glDepthMask(GL_FALSE) evita que el vidrio bloquee objetos detrás
+        // ═════════════════════════════════════════════════════════════════════
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthMask(GL_FALSE);
+
+        renderScene(true);
+
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);
+
+        // ═════════════════════════════════════════════════════════════════════
+        // PASS 3 — Bolsa de hielo semitransparente (alpha=0.85 por override)
+        // Debe ir AL FINAL: se renderiza sobre todo lo ya visible
+        // ═════════════════════════════════════════════════════════════════════
+        if (nt07 > 0.25f) {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            drawModel(shader, mdlHieloBolsa,
+                      pivotTranslate(bPos07 - bolsaInit),
+                      0.0f, 0.85f);
+
+            glDisable(GL_BLEND);
+        }
+
+        glfwSwapBuffers(win);
+    }
+
+    glfwTerminate();
+    return EXIT_SUCCESS;
+}
+
+// ─── UpdateAnims ─────────────────────────────────────────────────────────────
+void UpdateAnims(float dt)
+{
+    // ANIM_01: puertas refri → lerp suave hacia target (60°/s)
+    {
+        float target = refriAbierta ? 90.0f : 0.0f;
+        const float spd = 60.0f;
+        if (refriAngle < target)
+            refriAngle = glm::min(refriAngle + spd * dt, target);
+        else if (refriAngle > target)
+            refriAngle = glm::max(refriAngle - spd * dt, target);
+    }
+
+    // ANIM_02: puerta entrada → lerp suave hacia target (120°/s)
+    {
+        float target = puertaAbierta ? 90.0f : 0.0f;
+        const float spd = 120.0f;
+        if (puertaAngle < target)
+            puertaAngle = glm::min(puertaAngle + spd * dt, target);
+        else if (puertaAngle > target)
+            puertaAngle = glm::max(puertaAngle - spd * dt, target);
+    }
+
+    // ANIM_05: café — timer cíclico solo cuando activo; resetea al desactivar
+    if (cafetActiva) {
+        cafetTimer += dt;
+        if (cafetTimer >= 5.0f) cafetTimer -= 5.0f;
+    } else {
+        cafetTimer = 0.0f;
+    }
+
+    // ANIM_06: helados — timer cíclico solo cuando activo
+    if (heladoActivo) {
+        heladoTimer6 += dt;
+        if (heladoTimer6 >= 8.0f) heladoTimer6 -= 8.0f;
+    } else {
+        heladoTimer6 = 0.0f;
+    }
+
+    // ANIM_07: hielo — timer cíclico solo cuando activo (tecla I)
+    if (hieloActivo) {
+        hieloTimer += dt;
+        if (hieloTimer >= 5.0f) hieloTimer -= 5.0f;
+    } else {
+        hieloTimer = 0.0f;
+    }
+}
+
+// ─── Input ───────────────────────────────────────────────────────────────────
+void DoMovement()
+{
+    if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])    camera.ProcessKeyboard(FORWARD,  deltaTime);
+    if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])  camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])  camera.ProcessKeyboard(LEFT,     deltaTime);
+    if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT]) camera.ProcessKeyboard(RIGHT,    deltaTime);
+}
+
+void KeyCallback(GLFWwindow* win, int key, int, int action, int)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(win, GL_TRUE);
+    if (key >= 0 && key < 1024) {
+        if      (action == GLFW_PRESS)   keys[key] = true;
+        else if (action == GLFW_RELEASE) keys[key] = false;
+    }
+}
+
+void MouseCallback(GLFWwindow*, double xPos, double yPos)
+{
+    if (firstMouse) { lastX=(float)xPos; lastY=(float)yPos; firstMouse=false; }
+    float xOff = (float)xPos - lastX;
+    float yOff = lastY - (float)yPos;
+    lastX = (float)xPos; lastY = (float)yPos;
+    camera.ProcessMouseMovement(xOff, yOff);
+}

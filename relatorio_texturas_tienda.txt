@@ -1,0 +1,2407 @@
+------------------------------------------------------------
+RELATÓRIO DE TEXTURAS E CORES - PROJETO R2R
+------------------------------------------------------------
+
+OBJETO: REF_Pared_Refrigeradores
+MATERIAL: MAT_Refri
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Estructura_tienda_completa_R2R
+MATERIAL: MAT_Superior
+  - [Base Color]: TEX:Image_1
+  - [Metallic]: TEX:Image_2
+  - [Roughness]: TEX:Image_2
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]:  VAL:1.0000
+..............................
+MATERIAL: Pared_estanteria
+  - [Base Color]: RGB:0.8000,0.8000,0.8000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Piso_completo_r2r
+MATERIAL: Mat_Piso
+  - [Base Color]: TEX:Image_3
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Rack_Refri_2
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Soda
+  - [Base Color]: TEX:Image_9
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Refri_Puerta_3
+MATERIAL: MAT_Refri_1
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.0533
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Rack_Refri_6
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: New_Material.001
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Refri_Puerta_4
+MATERIAL: MAT_Refri_1
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.0533
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Vidrio_Ventana_1
+MATERIAL: Transparency
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:0.1500
+..............................
+
+OBJETO: REF_Vidrio_Ventana_2
+MATERIAL: Transparency
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:0.0000
+..............................
+
+OBJETO: REF_Rack_Bebidas
+MATERIAL: Transparency
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:0.0000
+..............................
+MATERIAL: 02_-_Default
+  - [Base Color]: TEX:Image_0.001
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.001
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.001
+  - [Base Color]: TEX:Image_0.002
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.002
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.003
+  - [Base Color]: TEX:Image_0.004
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.004
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.004
+  - [Base Color]: TEX:Image_0.005
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.005
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.005
+  - [Base Color]: TEX:Image_0.006
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.006
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.006
+  - [Base Color]: TEX:Image_0.007
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.007
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.007
+  - [Base Color]: TEX:Image_0.008
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.008
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.008
+  - [Base Color]: TEX:Image_0.009
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.009
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.009
+  - [Base Color]: TEX:Image_0.010
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.010
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.010
+  - [Base Color]: TEX:Image_0.011
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.011
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.011
+  - [Base Color]: TEX:Image_0.012
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.012
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.012
+  - [Base Color]: TEX:Image_0.013
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.013
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.013
+  - [Base Color]: TEX:Image_0.014
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.014
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.014
+  - [Base Color]: TEX:Image_0.015
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.015
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.015
+  - [Base Color]: TEX:Image_0.016
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.016
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.016
+  - [Base Color]: TEX:Image_0.017
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.017
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.017
+  - [Base Color]: TEX:Image_0.018
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.018
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.018
+  - [Base Color]: TEX:Image_0.019
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.019
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.019
+  - [Base Color]: TEX:Image_0.020
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.020
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.020
+  - [Base Color]: TEX:Image_0.021
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.021
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.021
+  - [Base Color]: TEX:Image_0.022
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.022
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.022
+  - [Base Color]: TEX:Image_0.023
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.023
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.023
+  - [Base Color]: TEX:Image_0.024
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.024
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.025
+  - [Base Color]: TEX:Image_0.026
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.026
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.027
+  - [Base Color]: TEX:Image_0.028
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.028
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.028
+  - [Base Color]: TEX:Image_0.029
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.029
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.029
+  - [Base Color]: TEX:Image_0.030
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.030
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.030
+  - [Base Color]: TEX:Image_0.031
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.031
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.031
+  - [Base Color]: TEX:Image_0.032
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.032
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.032
+  - [Base Color]: TEX:Image_0.033
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.033
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.033
+  - [Base Color]: TEX:Image_0.034
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.034
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.035
+  - [Base Color]: TEX:Image_0.036
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.036
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.034
+  - [Base Color]: TEX:Image_0.035
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.035
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.036
+  - [Base Color]: TEX:Image_0.037
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.037
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.037
+  - [Base Color]: TEX:Image_0.038
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.038
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.038
+  - [Base Color]: TEX:Image_0.039
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.039
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.039
+  - [Base Color]: TEX:Image_0.040
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.040
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.040
+  - [Base Color]: TEX:Image_0.041
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.041
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.041
+  - [Base Color]: TEX:Image_0.042
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.042
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.042
+  - [Base Color]: TEX:Image_0.043
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.043
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.043
+  - [Base Color]: TEX:Image_0.044
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.044
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.044
+  - [Base Color]: TEX:Image_0.045
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.045
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.045
+  - [Base Color]: TEX:Image_0.046
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.046
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.046
+  - [Base Color]: TEX:Image_0.047
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.047
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.047
+  - [Base Color]: TEX:Image_0.048
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.048
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.048
+  - [Base Color]: TEX:Image_0.049
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.049
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.049
+  - [Base Color]: TEX:Image_0.050
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.050
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.050
+  - [Base Color]: TEX:Image_0.051
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.051
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.051
+  - [Base Color]: TEX:Image_0.052
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.052
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.052
+  - [Base Color]: TEX:Image_0.053
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.053
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.053
+  - [Base Color]: TEX:Image_0.054
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.054
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.054
+  - [Base Color]: TEX:Image_0.055
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.055
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.055
+  - [Base Color]: TEX:Image_0.056
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.056
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.056
+  - [Base Color]: TEX:Image_0.057
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.057
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.057
+  - [Base Color]: TEX:Image_0.058
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.058
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.058
+  - [Base Color]: TEX:Image_0.059
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.059
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.059
+  - [Base Color]: TEX:Image_0.060
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.060
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.060
+  - [Base Color]: TEX:Image_0.061
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.061
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.061
+  - [Base Color]: TEX:Image_0.062
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.062
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.062
+  - [Base Color]: TEX:Image_0.063
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.063
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.063
+  - [Base Color]: TEX:Image_0.064
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.064
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: cashreg.001
+  - [Base Color]: TEX:Image_0.073
+  - [Metallic]: VAL:0.1626
+  - [Roughness]: VAL:0.7032
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Rack_Cigarros
+MATERIAL: Default_Material
+  - [Base Color]: RGB:0.0036,0.0036,0.0036
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Cigarros_2
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Cigarros_1
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Cigarros
+  - [Base Color]: TEX:Image_0.071
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.4006
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Trabe_Techo
+MATERIAL: Default_Material
+  - [Base Color]: RGB:0.0036,0.0036,0.0036
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Puerta_princ_Izq
+MATERIAL: Mat_Accesorios
+  - [Base Color]: TEX:Image_4
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_4
+..............................
+MATERIAL: Transparency
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:0.0000
+..............................
+
+OBJETO: REF_Mostrador
+MATERIAL: Mat_Accesorios
+  - [Base Color]: TEX:Image_4
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_4
+..............................
+MATERIAL: Default_Material
+  - [Base Color]: RGB:0.0036,0.0036,0.0036
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Papas_4
+  - [Base Color]: TEX:Image_5
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Galletas_2
+  - [Base Color]: TEX:Image_13
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Galletas_3
+  - [Base Color]: TEX:Image_13
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Soda_2
+  - [Base Color]: TEX:Image_17
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Dulces_2
+  - [Base Color]: TEX:Image_15
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Soda
+  - [Base Color]: TEX:Image_9
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Cereal_01_1
+  - [Base Color]: TEX:Image_11
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Material.003
+  - [Base Color]: TEX:Image_0.075
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.8211
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Material.004
+  - [Base Color]: TEX:Image_0.076
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.8211
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Estante_2
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Papas_4
+  - [Base Color]: TEX:Image_5
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Papas_3
+  - [Base Color]: TEX:Image_6
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Papas_2
+  - [Base Color]: TEX:Image_7
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Papas
+  - [Base Color]: TEX:Image_8
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Soda
+  - [Base Color]: TEX:Image_9
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Dulces_2
+  - [Base Color]: TEX:Image_15
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Dulces_1
+  - [Base Color]: TEX:Image_16
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Puerta_princ_Der
+MATERIAL: Mat_Accesorios
+  - [Base Color]: TEX:Image_4
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_4
+..............................
+MATERIAL: Transparency
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:0.0000
+..............................
+
+OBJETO: REF_Estante_1
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Soda
+  - [Base Color]: TEX:Image_9
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Cereal_01
+  - [Base Color]: TEX:Image_10
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Cereal_01_1
+  - [Base Color]: TEX:Image_11
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Cereal_01_2
+  - [Base Color]: TEX:Image_12
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Galletas_2
+  - [Base Color]: TEX:Image_13
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Galletas
+  - [Base Color]: TEX:Image_14
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Dulces_2
+  - [Base Color]: TEX:Image_15
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Dulces_1
+  - [Base Color]: TEX:Image_16
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Lampara_2
+MATERIAL: Emisive
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Lampara_1
+MATERIAL: Emisive
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_8
+MATERIAL: oxxo_ofertas_marzo_2020
+  - [Base Color]: TEX:Image_18
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_7
+MATERIAL: oxxo_ofertas_marzo_2020_1
+  - [Base Color]: TEX:Image_18
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_9
+MATERIAL: oxxo_ofertas_marzo_2020_1
+  - [Base Color]: TEX:Image_18
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_6
+MATERIAL: oxxo_ofertas_marzo_2020_1
+  - [Base Color]: TEX:Image_18
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_5
+MATERIAL: oxxo_ofertas_marzo_2020
+  - [Base Color]: TEX:Image_18
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_4
+MATERIAL: oxxo_ofertas_marzo_2020_1
+  - [Base Color]: TEX:Image_18
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_3
+MATERIAL: 448128
+  - [Base Color]: TEX:Image_19
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_1
+MATERIAL: oxxo_folleto_abril_mayo
+  - [Base Color]: TEX:Image_3.005
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Folleto_R2R_2
+MATERIAL: oxxo_folleto_abril_mayo_1
+  - [Base Color]: TEX:Image_3.005
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cartel_Wanted
+MATERIAL: signs_varios
+  - [Base Color]: TEX:wanted_me.png
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Mueble_Cafetera2
+MATERIAL: wood
+  - [Base Color]: RGB:0.0835,0.0255,0.0039
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.9928
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: table_leg
+  - [Base Color]: RGB:0.8000,0.8000,0.8000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.7859
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Varios_Cafetera2
+MATERIAL: Plast
+  - [Base Color]: RGB:0.8000,0.0558,0.0383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.9327
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: backup_backup_backup_Paper
+  - [Base Color]: RGB:0.2356,0.2842,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Metall
+  - [Base Color]: RGB:0.9551,0.9551,0.9551
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6202
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: material
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Paper.001
+  - [Base Color]: RGB:0.9114,0.9114,0.9114
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: backup_backup_backup_Paper.001
+  - [Base Color]: RGB:0.0821,0.2140,0.0047
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: backup_backup_backup_Paper.002
+  - [Base Color]: RGB:0.4969,0.1964,0.0109
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Paper.002
+  - [Base Color]: RGB:0.9114,0.9114,0.9114
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: backup_backup_backup_Paper.004
+  - [Base Color]: RGB:0.2356,0.2842,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Taza_Cafetera2_2
+MATERIAL: material
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Taza_Cafetera2_1
+MATERIAL: material
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cafetera2_Boquilla_3
+MATERIAL: la_mazocco_coffee_machine2chrome
+  - [Base Color]: RGB:0.5383,0.5383,0.5383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: chrome
+  - [Base Color]: RGB:0.2394,0.2394,0.2394
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: black_rubber
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cafetera2_Boquilla_2
+MATERIAL: la_mazocco_coffee_machine2chrome
+  - [Base Color]: RGB:0.5383,0.5383,0.5383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: chrome
+  - [Base Color]: RGB:0.2394,0.2394,0.2394
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: black_rubber
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cafetera2_Body
+MATERIAL: la_mazocco_coffee_machine2chrome
+  - [Base Color]: RGB:0.5383,0.5383,0.5383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2la_mazocco_coffee_machineblack_plastic_mat
+  - [Base Color]: RGB:0.0021,0.0021,0.0021
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6968
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2rubber
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2white_car_paint
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.5139
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2copper
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: chrome
+  - [Base Color]: RGB:0.2394,0.2394,0.2394
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2brushed_metal_mat
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: black_plastic_mat
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2thin_plastic
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:0.3371
+..............................
+MATERIAL: white_mat
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2la_mazocco_coffee_machinesilver_shiny
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2red_car_paint
+  - [Base Color]: RGB:0.9310,0.0041,0.0041
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2la_mazocco_coffee_machinebeige_mat
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: metal_mat
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: red_mat
+  - [Base Color]: RGB:0.9504,0.0064,0.0064
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: krispy_kreme_large_cup
+  - [Base Color]: TEX:Image_1.065
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cafetera2_Boquilla_1
+MATERIAL: la_mazocco_coffee_machine2chrome
+  - [Base Color]: RGB:0.5383,0.5383,0.5383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: chrome
+  - [Base Color]: RGB:0.2394,0.2394,0.2394
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: black_rubber
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Varios_Cafetera1
+MATERIAL: Plast.001
+  - [Base Color]: RGB:0.8000,0.0558,0.0383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.9327
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: backup_backup_backup_Paper.005
+  - [Base Color]: RGB:0.2356,0.2842,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Paper.003
+  - [Base Color]: RGB:0.9114,0.9114,0.9114
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Paper.004
+  - [Base Color]: RGB:0.9114,0.9114,0.9114
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: backup_backup_backup_Paper.006
+  - [Base Color]: RGB:0.2356,0.2842,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: backup_backup_backup_Paper.007
+  - [Base Color]: RGB:0.4969,0.1964,0.0109
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: backup_backup_backup_Paper.008
+  - [Base Color]: RGB:0.0821,0.2140,0.0047
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Metall.001
+  - [Base Color]: RGB:0.9551,0.9551,0.9551
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6202
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: material.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Taza_Cafetera1_2
+MATERIAL: material.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Taza_Cafetera1_1
+MATERIAL: material.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Mueble_Cafetera1
+MATERIAL: wood.001
+  - [Base Color]: RGB:0.0835,0.0255,0.0039
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.9928
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: table_leg.001
+  - [Base Color]: RGB:0.8000,0.8000,0.8000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.7859
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cafetera1_Boquilla_1
+MATERIAL: la_mazocco_coffee_machine2chrome.001
+  - [Base Color]: RGB:0.5383,0.5383,0.5383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: chrome.001
+  - [Base Color]: RGB:0.2394,0.2394,0.2394
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: black_rubber.001
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cafetera1_Boquilla_2
+MATERIAL: la_mazocco_coffee_machine2chrome.001
+  - [Base Color]: RGB:0.5383,0.5383,0.5383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: chrome.001
+  - [Base Color]: RGB:0.2394,0.2394,0.2394
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: black_rubber.001
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cafetera1_Boquilla_3
+MATERIAL: la_mazocco_coffee_machine2chrome.001
+  - [Base Color]: RGB:0.5383,0.5383,0.5383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: chrome.001
+  - [Base Color]: RGB:0.2394,0.2394,0.2394
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: black_rubber.001
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Cafetera1_Body
+MATERIAL: la_mazocco_coffee_machine2chrome.001
+  - [Base Color]: RGB:0.5383,0.5383,0.5383
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2red_car_paint.001
+  - [Base Color]: RGB:0.9310,0.0041,0.0041
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2la_mazocco_coffee_machinesilver_shiny.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2la_mazocco_coffee_machinebeige_mat.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: krispy_kreme_large_cup.001
+  - [Base Color]: TEX:Image_1.066
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2copper.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2la_mazocco_coffee_machineblack_plastic_mat.001
+  - [Base Color]: RGB:0.0021,0.0021,0.0021
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6968
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2rubber.001
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2brushed_metal_mat.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: black_plastic_mat.001
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2thin_plastic.001
+  - [Base Color]: RGB:1.0000,0.4253,0.0632
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:0.3371
+..............................
+MATERIAL: chrome.001
+  - [Base Color]: RGB:0.2394,0.2394,0.2394
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: white_mat.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: la_mazocco_coffee_machine2white_car_paint.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.5139
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: metal_mat.001
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: red_mat.001
+  - [Base Color]: RGB:0.9504,0.0064,0.0064
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Helados1_Body
+MATERIAL: White_Plastic
+  - [Base Color]: RGB:0.2428,0.1382,0.7776
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Procedural_pearl_black_painted_plastic
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Glass.001
+  - [Base Color]: TEX:Image_0.067
+  - [Metallic]: TEX:Image_1.067
+  - [Roughness]: TEX:Image_1.067
+  - [Normal]: TEX:Image_2.001
+  - [Alpha]: TEX:Image_0.067
+..............................
+MATERIAL: PM-T1_Plastic_Finish_Red
+  - [Base Color]: TEX:Image_3.001
+  - [Metallic]: TEX:Image_4.001
+  - [Roughness]: TEX:Image_4.001
+  - [Normal]: TEX:Image_5.001
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Plastic_white_material
+  - [Base Color]: TEX:Image_6.001
+  - [Metallic]: TEX:Image_7.001
+  - [Roughness]: TEX:Image_7.001
+  - [Normal]: TEX:Image_8.001
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Material.006
+  - [Base Color]: TEX:R2R (1) (1).png.001
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:R2R (1) (1).png.001
+..............................
+
+OBJETO: REF_Helados1_Tapa
+MATERIAL: Glass.001
+  - [Base Color]: TEX:Image_0.067
+  - [Metallic]: TEX:Image_1.067
+  - [Roughness]: TEX:Image_1.067
+  - [Normal]: TEX:Image_2.001
+  - [Alpha]: TEX:Image_0.067
+..............................
+MATERIAL: Procedural_pearl_black_painted_plastic
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Paletas_1
+MATERIAL: Material.011
+  - [Base Color]: TEX:Image_11.001
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_11.001
+..............................
+
+OBJETO: REF_Helados2_Tapa
+MATERIAL: Glass.002
+  - [Base Color]: TEX:Image_0.068
+  - [Metallic]: TEX:Image_1.068
+  - [Roughness]: TEX:Image_1.068
+  - [Normal]: TEX:Image_2.002
+  - [Alpha]: TEX:Image_0.068
+..............................
+MATERIAL: Procedural_pearl_black_painted_plastic.001
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Paletas_2
+MATERIAL: Material.001
+  - [Base Color]: TEX:Image_11.002
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_11.002
+..............................
+
+OBJETO: REF_Helados2_Body
+MATERIAL: White_Plastic.001
+  - [Base Color]: RGB:0.0032,0.7776,0.6121
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:1.0000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Procedural_pearl_black_painted_plastic.001
+  - [Base Color]: RGB:0.0000,0.0000,0.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Material.002
+  - [Base Color]: TEX:R2R (1) (1).png.001
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:R2R (1) (1).png.001
+..............................
+MATERIAL: Plastic_white_material.001
+  - [Base Color]: TEX:Image_6.002
+  - [Metallic]: TEX:Image_7.002
+  - [Roughness]: TEX:Image_7.002
+  - [Normal]: TEX:Image_8.002
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: PM-T1_Plastic_Finish_Red.001
+  - [Base Color]: TEX:Image_3.002
+  - [Metallic]: TEX:Image_4.002
+  - [Roughness]: TEX:Image_4.002
+  - [Normal]: TEX:Image_5.002
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Glass.002
+  - [Base Color]: TEX:Image_0.068
+  - [Metallic]: TEX:Image_1.068
+  - [Roughness]: TEX:Image_1.068
+  - [Normal]: TEX:Image_2.002
+  - [Alpha]: TEX:Image_0.068
+..............................
+
+OBJETO: REF_Caja2_Body
+MATERIAL: cashreg
+  - [Base Color]: TEX:Image_0.072
+  - [Metallic]: VAL:0.1626
+  - [Roughness]: VAL:0.7032
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Caja1_Body
+MATERIAL: cashreg.001
+  - [Base Color]: TEX:Image_0.073
+  - [Metallic]: VAL:0.1626
+  - [Roughness]: VAL:0.7032
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Camara_Soporte
+MATERIAL: CameraMain
+  - [Base Color]: RGB:0.6619,0.6619,0.6619
+  - [Metallic]: VAL:0.5000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Camara_Head
+MATERIAL: CameraMain
+  - [Base Color]: RGB:0.6619,0.6619,0.6619
+  - [Metallic]: VAL:0.5000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Cable
+  - [Base Color]: RGB:0.0147,0.0147,0.0147
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: RedLight
+  - [Base Color]: RGB:0.6152,0.0000,0.0008
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: CameraLens
+  - [Base Color]: RGB:0.0470,0.0470,0.0470
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: CameraGlass
+  - [Base Color]: RGB:0.1329,0.1329,0.1329
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.1000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Poste_R2R
+MATERIAL: 02_-_Default.064
+  - [Base Color]: TEX:Image_0.077
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.8930
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Basura
+MATERIAL: TrashBin
+  - [Base Color]: TEX:Image_0.078
+  - [Metallic]: TEX:Image_1.073
+  - [Roughness]: TEX:Image_1.073
+  - [Normal]: TEX:Image_2.006
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: bag_3
+  - [Base Color]: TEX:Image_3.003
+  - [Metallic]: TEX:Image_4.003
+  - [Roughness]: TEX:Image_4.003
+  - [Normal]: TEX:Image_5.003
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: bag_2
+  - [Base Color]: TEX:Image_6.003
+  - [Metallic]: TEX:Image_7.003
+  - [Roughness]: TEX:Image_7.003
+  - [Normal]: TEX:Image_5.003
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: bag_one
+  - [Base Color]: TEX:Image_8.003
+  - [Metallic]: TEX:Image_9.003
+  - [Roughness]: TEX:Image_9.003
+  - [Normal]: TEX:Image_5.003
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: bag_4
+  - [Base Color]: TEX:Image_10.003
+  - [Metallic]: TEX:Image_11.003
+  - [Roughness]: TEX:Image_11.003
+  - [Normal]: TEX:Image_5.003
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Logo_Tienda_Entrada_Principal
+MATERIAL: Logo_R2R
+  - [Base Color]: TEX:R2R (1) (1).png
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:R2R (1) (1).png
+..............................
+
+OBJETO: REF_Logo_poste_R2R
+MATERIAL: Logo_R2R.001
+  - [Base Color]: TEX:R2R (1) (1).png.001
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:R2R (1) (1).png.001
+..............................
+
+OBJETO: REF_Refri_Puerta_1
+MATERIAL: MAT_Refri_1
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.0533
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Rack_Refri_3
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: New_Material.001
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Rack_Refri_4
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: New_Material.001
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Rack_Refri_5
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: New_Material.001
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Rack_Refri_7
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Soda
+  - [Base Color]: TEX:Image_9
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Rack_Refri_1
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Soda
+  - [Base Color]: TEX:Image_9
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Rack_Refri_8
+MATERIAL: New_Material
+  - [Base Color]: RGB:0.7642,0.7642,0.7642
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: Soda
+  - [Base Color]: TEX:Image_9
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Refri_Puerta_6
+MATERIAL: MAT_Refri_1
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.0533
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Refri_Puerta_5
+MATERIAL: MAT_Refri_1
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.0533
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Refri_Puerta_7
+MATERIAL: MAT_Refri_1
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.0533
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Refri_Puerta_2
+MATERIAL: MAT_Refri_1
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.0533
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Refri_Puerta_8
+MATERIAL: MAT_Refri_1
+  - [Base Color]: TEX:Image_0
+  - [Metallic]: VAL:1.0000
+  - [Roughness]: VAL:0.0533
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: TEX:Image_0
+..............................
+
+OBJETO: REF_Chorro_Cafe_Cafetera2_Taza_2
+MATERIAL: Material
+  - [Base Color]: RGB:0.0437,0.0116,0.0030
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Taza_Cafe
+MATERIAL: Material.005
+  - [Base Color]: RGB:0.0437,0.0116,0.0030
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.5070
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Caja2_Cajon
+MATERIAL: cashreg
+  - [Base Color]: TEX:Image_0.072
+  - [Metallic]: VAL:0.1626
+  - [Roughness]: VAL:0.7032
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Hielo_Puerta
+MATERIAL: lambert2.001
+  - [Base Color]: TEX:Image_0.074
+  - [Metallic]: VAL:0.5000
+  - [Roughness]: TEX:Fingerprints001_1K-JPG_Color.jpg
+  - [Normal]: TEX:Image_2.005
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Hielo_Body
+MATERIAL: lambert2.001
+  - [Base Color]: TEX:Image_0.074
+  - [Metallic]: VAL:0.5000
+  - [Roughness]: TEX:Fingerprints001_1K-JPG_Color.jpg
+  - [Normal]: TEX:Image_2.005
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Hielo_Bolsa
+MATERIAL: Garbage_Bag
+  - [Base Color]: RGB:0.8000,0.8000,0.8000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.1000
+  - [Normal]: TEX:Image_3.004
+  - [Alpha]: VAL:1.0000
+..............................
+
+OBJETO: REF_Caja1_Cajon
+MATERIAL: Transparency
+  - [Base Color]: RGB:1.0000,1.0000,1.0000
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.6000
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:0.0000
+..............................
+MATERIAL: 02_-_Default
+  - [Base Color]: TEX:Image_0.001
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.001
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.001
+  - [Base Color]: TEX:Image_0.002
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.002
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.003
+  - [Base Color]: TEX:Image_0.004
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.004
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.004
+  - [Base Color]: TEX:Image_0.005
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.005
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.005
+  - [Base Color]: TEX:Image_0.006
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.006
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.006
+  - [Base Color]: TEX:Image_0.007
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.007
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.007
+  - [Base Color]: TEX:Image_0.008
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.008
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.008
+  - [Base Color]: TEX:Image_0.009
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.009
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.009
+  - [Base Color]: TEX:Image_0.010
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.010
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.010
+  - [Base Color]: TEX:Image_0.011
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.011
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.011
+  - [Base Color]: TEX:Image_0.012
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.012
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.012
+  - [Base Color]: TEX:Image_0.013
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.013
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.013
+  - [Base Color]: TEX:Image_0.014
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.014
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.014
+  - [Base Color]: TEX:Image_0.015
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.015
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.015
+  - [Base Color]: TEX:Image_0.016
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.016
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.016
+  - [Base Color]: TEX:Image_0.017
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.017
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.017
+  - [Base Color]: TEX:Image_0.018
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.018
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.018
+  - [Base Color]: TEX:Image_0.019
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.019
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.019
+  - [Base Color]: TEX:Image_0.020
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.020
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.020
+  - [Base Color]: TEX:Image_0.021
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.021
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.021
+  - [Base Color]: TEX:Image_0.022
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.022
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.022
+  - [Base Color]: TEX:Image_0.023
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.023
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.023
+  - [Base Color]: TEX:Image_0.024
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.024
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.025
+  - [Base Color]: TEX:Image_0.026
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.026
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.027
+  - [Base Color]: TEX:Image_0.028
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.028
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.028
+  - [Base Color]: TEX:Image_0.029
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.029
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.029
+  - [Base Color]: TEX:Image_0.030
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.030
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.030
+  - [Base Color]: TEX:Image_0.031
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.031
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.031
+  - [Base Color]: TEX:Image_0.032
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.032
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.032
+  - [Base Color]: TEX:Image_0.033
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.033
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.033
+  - [Base Color]: TEX:Image_0.034
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.034
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.035
+  - [Base Color]: TEX:Image_0.036
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.036
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.034
+  - [Base Color]: TEX:Image_0.035
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.035
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.036
+  - [Base Color]: TEX:Image_0.037
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.037
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.037
+  - [Base Color]: TEX:Image_0.038
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.038
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.038
+  - [Base Color]: TEX:Image_0.039
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.039
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.039
+  - [Base Color]: TEX:Image_0.040
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.040
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.040
+  - [Base Color]: TEX:Image_0.041
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.041
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.041
+  - [Base Color]: TEX:Image_0.042
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.042
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.042
+  - [Base Color]: TEX:Image_0.043
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.043
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.043
+  - [Base Color]: TEX:Image_0.044
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.044
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.044
+  - [Base Color]: TEX:Image_0.045
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.045
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.045
+  - [Base Color]: TEX:Image_0.046
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.046
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.046
+  - [Base Color]: TEX:Image_0.047
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.047
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.047
+  - [Base Color]: TEX:Image_0.048
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.048
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.048
+  - [Base Color]: TEX:Image_0.049
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.049
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.049
+  - [Base Color]: TEX:Image_0.050
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.050
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.050
+  - [Base Color]: TEX:Image_0.051
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.051
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.051
+  - [Base Color]: TEX:Image_0.052
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.052
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.052
+  - [Base Color]: TEX:Image_0.053
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.053
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.053
+  - [Base Color]: TEX:Image_0.054
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.054
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.054
+  - [Base Color]: TEX:Image_0.055
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.055
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.055
+  - [Base Color]: TEX:Image_0.056
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.056
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.056
+  - [Base Color]: TEX:Image_0.057
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.057
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.057
+  - [Base Color]: TEX:Image_0.058
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.058
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.058
+  - [Base Color]: TEX:Image_0.059
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.059
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.059
+  - [Base Color]: TEX:Image_0.060
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.060
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.060
+  - [Base Color]: TEX:Image_0.061
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.061
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.061
+  - [Base Color]: TEX:Image_0.062
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.062
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.062
+  - [Base Color]: TEX:Image_0.063
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.063
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: 02_-_Default.063
+  - [Base Color]: TEX:Image_0.064
+  - [Metallic]: VAL:0.0000
+  - [Roughness]: VAL:0.0594
+  - [Normal]: TEX:Image_1.064
+  - [Alpha]: VAL:1.0000
+..............................
+MATERIAL: cashreg.001
+  - [Base Color]: TEX:Image_0.073
+  - [Metallic]: VAL:0.1626
+  - [Roughness]: VAL:0.7032
+  - [Normal]: RGB:0.0000,0.0000,0.0000
+  - [Alpha]: VAL:1.0000
+..............................
+
