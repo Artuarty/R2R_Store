@@ -39,9 +39,10 @@ public:
     MaterialData         mat;
     glm::vec3            solidColor{0.5f, 0.5f, 0.5f}; // color sólido para materiales RGB:
 
-    // true si este mesh tiene transparencia real (necesita pass 2 con blending)
     bool isTransparent() const {
-        return mat.opacity < 1.0f || mat.useTexAlpha;
+        // Solo es transparente si la opacidad es claramente menor a 1
+        // O si el motor confirmó que la textura tiene un canal alfa real.
+        return (mat.opacity < 0.95f) || mat.useTexAlpha;
     }
 
     Mesh(std::vector<Vertex> v, std::vector<GLuint> i,
