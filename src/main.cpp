@@ -11,9 +11,12 @@
  *
  * Controles:
  *   WASD / Flechas → mover cámara    Mouse → apuntar
- *   E              → toggle puerta entrada
- *   R              → toggle cajón caja registradora
- *   I              → toggle pausa máquina de hielo (ANIM_07)
+ *   1              → toggle puertas refrigerador (ANIM_01)
+ *   E              → toggle puerta entrada (ANIM_02)
+ *   C              → toggle animación cafetera/café (ANIM_05)
+ *   H              → toggle extracción helado (ANIM_06)
+ *   I              → toggle ciclo máquina de hielo (ANIM_07)
+ *   R              → toggle cajón caja registradora (ANIM_04)
  *   ESC            → salir
  */
 
@@ -63,6 +66,10 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
 // ─── Estado de animaciones ────────────────────────────────────────────────────
+bool  refriAbierta    = false;   // ANIM_01  tecla 1
+float refriAngle      = 0.0f;
+bool  refriPrev       = false;
+
 bool  puertaAbierta   = false;   // ANIM_02  tecla E
 float puertaAngle     = 0.0f;
 bool  puertaPrev      = false;
@@ -70,7 +77,15 @@ bool  puertaPrev      = false;
 bool  cajonActivo     = false;   // ANIM_04  tecla R
 bool  cajonPrev       = false;
 
-bool  hieloPausado    = false;   // ANIM_07  tecla I
+bool  cafetActiva     = false;   // ANIM_05  tecla C
+float cafetTimer      = 0.0f;   // segundos [0, 5)
+bool  cafetPrev       = false;
+
+bool  heladoActivo    = false;   // ANIM_06  tecla H
+float heladoTimer6    = 0.0f;   // segundos [0, 8)
+bool  heladoPrev      = false;
+
+bool  hieloActivo     = false;   // ANIM_07  tecla I (toggle on/off ciclo)
 float hieloTimer      = 0.0f;   // segundos [0, 5)
 bool  hieloPrev       = false;
 
@@ -128,8 +143,23 @@ inline glm::mat4 pivotRotX(glm::vec3 pivot, float angleDeg) {
          * glm::translate(glm::mat4(1.0f), -pivot);
 }
 
+// Rotación sobre eje Z en torno a un pivote (compuerta de máquina de hielo)
+// -90° hace caer el tope de la compuerta hacia +X (hacia el interior de la tienda)
+inline glm::mat4 pivotRotZ(glm::vec3 pivot, float angleDeg) {
+    return glm::translate(glm::mat4(1.0f), pivot)
+         * glm::rotate(glm::mat4(1.0f), glm::radians(angleDeg), glm::vec3(0,0,1))
+         * glm::translate(glm::mat4(1.0f), -pivot);
+}
+
 inline glm::mat4 pivotTranslate(glm::vec3 offset) {
     return glm::translate(glm::mat4(1.0f), offset);
+}
+
+// Escala en Y desde un pivote (chorro de café crece hacia abajo desde la boquilla)
+inline glm::mat4 pivotScaleY(glm::vec3 pivot, float sy) {
+    return glm::translate(glm::mat4(1.0f), pivot)
+         * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, sy, 1.0f))
+         * glm::translate(glm::mat4(1.0f), -pivot);
 }
 
 // ─── main ─────────────────────────────────────────────────────────────────────
@@ -282,12 +312,14 @@ int main(int argc, char* argv[])
 
     // ── ANIM_07: Máquina de hielo ─────────────────────────────────────────────
     // ESCENA Puerta:(-3.2104,2.4565,1.8957)  Bolsa:(-3.4436,2.0144,1.8423)
+    // La máquina está en la pared izquierda (X≈-3.7) con la puerta hacia el interior (+X)
+    // La compuerta rota sobre eje Z con -90° → el tope cae hacia +X (afuera de la pared)
     Model mdlHieloPuerta(mdl+"REF_Hielo_Puerta.obj",texMgr,texReport);
     Model mdlHieloBolsa (mdl+"REF_Hielo_Bolsa.obj", texMgr,texReport);
     glm::vec3 pvHieloPuerta = blenderToOBJ(-3.2104f, 2.4565f, 1.8957f);
     glm::vec3 bolsaInit     = blenderToOBJ(-3.4436f, 2.0144f, 1.8423f);
-    // Posición final: la bolsa sale hacia afuera (+Z) y cae ligeramente (-Y)
-    glm::vec3 bolsaFinal    = bolsaInit + glm::vec3(0.0f, -0.15f, 0.6f);
+    // Posición final: la bolsa sale hacia +X (interior de tienda, frente de la máquina)
+    glm::vec3 bolsaFinal    = bolsaInit + glm::vec3(0.8f, -0.10f, 0.0f);
 
     // ── ANIM_LETRERO: Logos R2R emisivos ─────────────────────────────────────
     Model mdlLogoEntrada(mdl+"REF_Logo_Tienda_Entrada_Principal.obj",texMgr,texReport);
@@ -317,9 +349,12 @@ int main(int argc, char* argv[])
             prev = cur;
             return trig;
         };
-        if (toggleOn(GLFW_KEY_E, puertaPrev)) puertaAbierta = !puertaAbierta;
-        if (toggleOn(GLFW_KEY_R, cajonPrev))  cajonActivo   = !cajonActivo;
-        if (toggleOn(GLFW_KEY_I, hieloPrev))  hieloPausado  = !hieloPausado;
+        if (toggleOn(GLFW_KEY_1, refriPrev))   refriAbierta  = !refriAbierta;
+        if (toggleOn(GLFW_KEY_E, puertaPrev))  puertaAbierta = !puertaAbierta;
+        if (toggleOn(GLFW_KEY_R, cajonPrev))   cajonActivo   = !cajonActivo;
+        if (toggleOn(GLFW_KEY_C, cafetPrev))   cafetActiva   = !cafetActiva;
+        if (toggleOn(GLFW_KEY_H, heladoPrev))  heladoActivo  = !heladoActivo;
+        if (toggleOn(GLFW_KEY_I, hieloPrev))   hieloActivo   = !hieloActivo;
 
         UpdateAnims(deltaTime);
 
@@ -369,12 +404,25 @@ int main(int argc, char* argv[])
         shader.setFloat("pointLights[1].linear",    0.07f);
         shader.setFloat("pointLights[1].quadratic", 0.017f);
 
+        // ── Luz cafetera: cálido dorado que ilumina la barra de cafeteras ────
+        // Posición: sobre el mostrador de cafeteras, a altura de trabajo
+        // Color cálido (naranja-dorado) para realzar los tonos marrones del café
+        const glm::vec3 cafLightClr(1.0f, 0.72f, 0.30f);
+        glm::vec3 cafLightPos = blenderToOBJ(-2.2f, 4.0f, 2.4f);
+        shader.setVec3 ("pointLights[2].position",  cafLightPos);
+        shader.setVec3 ("pointLights[2].ambient",   cafLightClr * 0.20f);
+        shader.setVec3 ("pointLights[2].diffuse",   cafLightClr * 0.90f);
+        shader.setVec3 ("pointLights[2].specular",  cafLightClr * 0.40f);
+        shader.setFloat("pointLights[2].constant",  1.0f);
+        shader.setFloat("pointLights[2].linear",    0.22f);
+        shader.setFloat("pointLights[2].quadratic", 0.20f);
+
         // ─────────────────────────────────────────────────────────────────────
         // Pre-computar estado de todas las animaciones (usado en ambos passes)
         // ─────────────────────────────────────────────────────────────────────
 
-        // ANIM_01: puertas refri — angle = 45°·(1+sin(t·0.8)) ∈ [0°,90°]
-        float refriAngle = 45.0f * (1.0f + sinf(t * 0.8f));
+        // ANIM_01: puertas refri — toggle con tecla 1; lerp suave hacia target
+        // Puertas 1-4 (i<4) abren en sentido -Y (negativo); 5-8 en +Y
 
         // ANIM_03: cámara — paneo oscilante ±60°
         float camaraAngle = 60.0f * sinf(t * 0.5f);
@@ -382,21 +430,34 @@ int main(int argc, char* argv[])
         // ANIM_04: cajones — deslizamiento Z cuando activo
         float offset04 = cajonActivo ? 0.15f * (1.0f + sinf(t * 1.2f)) * 0.5f : 0.0f;
 
-        // ANIM_05: taza café — sube en Y con smoothstep cúbico
-        // Fase 1 (0.0→0.3): espera  Fase 2 (0.3→0.8): sube  Fase 3 (0.8→1.0): llena
-        float rise05 = 0.0f;
-        {
-            float ct = fmodf(t, 5.0f) / 5.0f;
-            if      (ct >= 0.3f && ct <= 0.8f) rise05 = 0.06f * smoothstep((ct - 0.3f) / 0.5f);
-            else if (ct >  0.8f)               rise05 = 0.06f;
+        // ANIM_05: taza café — activa con tecla C; smoothstep cúbico
+        // Fase 1 (0→0.3): chorro aparece (escala Y del chorro 0→1)
+        // Fase 2 (0.3→0.8): taza sube mientras el café cae
+        // Fase 3 (0.8→1.0): chorro desaparece, taza llena
+        // Fase 1 (0→0.3): glow aparece     Fase 2 (0.3→0.8): taza sube
+        // Fase 3 (0.8→1.0): glow desaparece, taza en posición llena
+        float rise05   = 0.0f;
+        float tazaGlow = 0.0f;   // emisivo marrón cálido durante el servicio
+        if (cafetActiva) {
+            float ct = fmodf(cafetTimer, 5.0f) / 5.0f;
+            if (ct < 0.3f) {
+                tazaGlow = smoothstep(ct / 0.3f) * 0.4f;
+            } else if (ct <= 0.8f) {
+                rise05   = 0.12f * smoothstep((ct - 0.3f) / 0.5f);
+                tazaGlow = 0.5f;
+            } else {
+                float fade = smoothstep((ct - 0.8f) / 0.2f);
+                rise05   = 0.12f;
+                tazaGlow = (1.0f - fade) * 0.4f;
+            }
         }
 
-        // ANIM_06: helados — tapa (rot X) + paleta (curva Bézier cúbica)
+        // ANIM_06: helados — activa con tecla H; tapa (rot X) + paleta (Bézier cúbica)
         // B(t)=(1-t)³P0+3(1-t)²tP1+3(1-t)t²P2+t³P3  con smoothstep por fase
-        float tapaAngle06  = 0.0f;
+        float tapaAngle06     = 0.0f;
         glm::vec3 paletaPos06 = bezP0;
-        {
-            float ht = fmodf(t, 8.0f) / 8.0f;
+        if (heladoActivo) {
+            float ht = fmodf(heladoTimer6, 8.0f) / 8.0f;
             if (ht < 0.33f) {
                 tapaAngle06 = -45.0f * smoothstep(ht / 0.33f);
             } else if (ht < 0.66f) {
@@ -416,23 +477,26 @@ int main(int argc, char* argv[])
             0.3f*(1.0f + sinf(2.0f*glm::pi<float>()*2.1f*t)),
             0.0f, 1.0f);
 
-        // ANIM_07: máquina de hielo — compuerta + bolsa
+        // ANIM_07: máquina de hielo — compuerta (pivotRotZ -90°) + bolsa sale por +X
         // Fases: apertura(0→0.25), bolsa sale(0.25→0.70), reposo(0.70→0.85), cierre(0.85→1.0)
-        // Smoothstep cúbico: f(t)=t²(3-2t) → velocidad 0 en extremos (arranque/frenado suave)
-        float nt07 = hieloTimer / 5.0f;
+        // Smoothstep cúbico: f(t)=t²(3-2t) → velocidad 0 en extremos
+        float nt07 = hieloActivo ? (hieloTimer / 5.0f) : 0.0f;
         float puertaAng07 = 0.0f;
         if      (nt07 <= 0.25f) puertaAng07 = -90.0f * smoothstep(nt07 / 0.25f);
         else if (nt07 <= 0.85f) puertaAng07 = -90.0f;
         else                    puertaAng07 = -90.0f * (1.0f - smoothstep((nt07 - 0.85f) / 0.15f));
 
-        // Posición bolsa (Δy con gravedad: ½·g·tL² — cinemática newtoniana)
+        // Posición bolsa: desliza en +X (frente de la máquina) con gravedad en Y
+        // lerp3 sobre las 3 componentes; componente Y adiciona caída gravitacional
         glm::vec3 bPos07 = bolsaInit;
-        if (nt07 > 0.25f) {
+        if (nt07 > 0.25f && hieloActivo) {
             if (nt07 <= 0.70f) {
                 float tL   = (nt07 - 0.25f) / 0.45f;
                 float ease = smoothstep(tL);
-                bPos07.z = lerp(bolsaInit.z, bolsaFinal.z, ease);
+                bPos07.x = lerp(bolsaInit.x, bolsaFinal.x, ease);
                 bPos07.y = lerp(bolsaInit.y, bolsaFinal.y, ease);
+                bPos07.z = lerp(bolsaInit.z, bolsaFinal.z, ease);
+                // Gravedad newtoniana: Δy = ½·g·tL²  (g=-9.8, escala 0.015)
                 bPos07.y += 0.5f * (-9.8f * 0.015f) * tL * tL;
             } else {
                 bPos07 = bolsaFinal;
@@ -442,12 +506,18 @@ int main(int argc, char* argv[])
         // ─────────────────────────────────────────────────────────────────────
         // Helper: configura uniforms y despacha opaco o transparente
         // ─────────────────────────────────────────────────────────────────────
+        // Color base del emisivo: azul R2R para letrero, marrón cálido para café
+        const glm::vec3 emR2R (0.31f, 0.76f, 0.97f);  // neón azul R2R
+        const glm::vec3 emCafe(0.80f, 0.40f, 0.05f);  // marrón cálido café
+
         auto draw = [&](bool trans, Model& m, const glm::mat4& xf,
-                        float em = 0.0f, float al = -1.0f)
+                        float em = 0.0f, float al = -1.0f,
+                        glm::vec3 emColor = glm::vec3(0.31f, 0.76f, 0.97f))
         {
             shader.setMat4  ("model",             xf);
             shader.setFloat ("emissiveIntensity", em);
             shader.setFloat ("alphaOverride",     al);
+            shader.setVec3  ("uEmissiveColor",    emColor);
             if (trans) m.DrawTransparent(shader);
             else       m.DrawOpaque(shader);
         };
@@ -461,8 +531,12 @@ int main(int argc, char* argv[])
                 draw(trans, *s, I);
 
             // ANIM_01 — puertas refrigerador (rot Y alrededor de bisagra)
-            for (int i = 0; i < 8; i++)
-                draw(trans, *mdlRefri[i], pivotRotY(refriPivot(i), refriAngle));
+            // Puertas 1-4 (i<4): ángulo negativo (abren hacia -Y)
+            // Puertas 5-8 (i≥4): ángulo positivo (abren hacia +Y)
+            for (int i = 0; i < 8; i++) {
+                float ang = (i < 4) ? -refriAngle : refriAngle;
+                draw(trans, *mdlRefri[i], pivotRotY(refriPivot(i), ang));
+            }
 
             // ANIM_02 — puerta de entrada (toggle E)
             draw(trans, mdlPuertaDer, pivotRotY(pvDer, -puertaAngle));
@@ -475,19 +549,21 @@ int main(int argc, char* argv[])
             draw(trans, mdlCajon1, pivotTranslate(glm::vec3(0, 0, offset04)));
             draw(trans, mdlCajon2, pivotTranslate(glm::vec3(0, 0, offset04)));
 
-            // ANIM_05 — taza de café
-            draw(trans, mdlTazaCafe, pivotTranslate(glm::vec3(0, rise05, 0)));
+            // ANIM_05 — taza de café con glow cálido cuando se sirve
+            draw(trans, mdlTazaCafe,
+                 pivotTranslate(glm::vec3(0, rise05, 0)),
+                 tazaGlow, -1.0f, emCafe);
 
             // ANIM_06 — helados: tapa y paleta
             draw(trans, mdlTapa1,   pivotRotX(pvTapa1, tapaAngle06));
             draw(trans, mdlPaleta1, pivotTranslate(paletaPos06 - pvPaleta1));
 
-            // ANIM_LETRERO — logos R2R neón pulsante
-            draw(trans, mdlLogoEntrada, I, emissive07);
-            draw(trans, mdlLogoPoste,   I, emissive07);
+            // ANIM_LETRERO — logos R2R neón pulsante (color azul R2R)
+            draw(trans, mdlLogoEntrada, I, emissive07, -1.0f, emR2R);
+            draw(trans, mdlLogoPoste,   I, emissive07, -1.0f, emR2R);
 
-            // ANIM_07 — compuerta de hielo (la bolsa se maneja en PASS 3)
-            draw(trans, mdlHieloPuerta, pivotRotX(pvHieloPuerta, puertaAng07));
+            // ANIM_07 — compuerta de hielo (pivotRotZ: cae hacia +X = frente de la máquina)
+            draw(trans, mdlHieloPuerta, pivotRotZ(pvHieloPuerta, puertaAng07));
         };
 
         // ═════════════════════════════════════════════════════════════════════
@@ -534,18 +610,48 @@ int main(int argc, char* argv[])
 // ─── UpdateAnims ─────────────────────────────────────────────────────────────
 void UpdateAnims(float dt)
 {
-    // ANIM_02: puerta → lerp suave hacia target (120°/s)
-    float target = puertaAbierta ? 90.0f : 0.0f;
-    const float spd = 120.0f;
-    if (puertaAngle < target)
-        puertaAngle = glm::min(puertaAngle + spd * dt, target);
-    else if (puertaAngle > target)
-        puertaAngle = glm::max(puertaAngle - spd * dt, target);
+    // ANIM_01: puertas refri → lerp suave hacia target (60°/s)
+    {
+        float target = refriAbierta ? 90.0f : 0.0f;
+        const float spd = 60.0f;
+        if (refriAngle < target)
+            refriAngle = glm::min(refriAngle + spd * dt, target);
+        else if (refriAngle > target)
+            refriAngle = glm::max(refriAngle - spd * dt, target);
+    }
 
-    // ANIM_07: timer cíclico (si no está pausado)
-    if (!hieloPausado) {
+    // ANIM_02: puerta entrada → lerp suave hacia target (120°/s)
+    {
+        float target = puertaAbierta ? 90.0f : 0.0f;
+        const float spd = 120.0f;
+        if (puertaAngle < target)
+            puertaAngle = glm::min(puertaAngle + spd * dt, target);
+        else if (puertaAngle > target)
+            puertaAngle = glm::max(puertaAngle - spd * dt, target);
+    }
+
+    // ANIM_05: café — timer cíclico solo cuando activo; resetea al desactivar
+    if (cafetActiva) {
+        cafetTimer += dt;
+        if (cafetTimer >= 5.0f) cafetTimer -= 5.0f;
+    } else {
+        cafetTimer = 0.0f;
+    }
+
+    // ANIM_06: helados — timer cíclico solo cuando activo
+    if (heladoActivo) {
+        heladoTimer6 += dt;
+        if (heladoTimer6 >= 8.0f) heladoTimer6 -= 8.0f;
+    } else {
+        heladoTimer6 = 0.0f;
+    }
+
+    // ANIM_07: hielo — timer cíclico solo cuando activo (tecla I)
+    if (hieloActivo) {
         hieloTimer += dt;
         if (hieloTimer >= 5.0f) hieloTimer -= 5.0f;
+    } else {
+        hieloTimer = 0.0f;
     }
 }
 
