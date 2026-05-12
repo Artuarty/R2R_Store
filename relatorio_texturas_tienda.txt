@@ -17,7 +17,7 @@ MATERIAL: MAT_Superior
   - [Metallic]: TEX:Image_2
   - [Roughness]: TEX:Image_2
   - [Normal]: RGB:0.0000,0.0000,0.0000
-  - [Alpha]: TEX:Image_1
+  - [Alpha]:  VAL:1.0000
 ..............................
 MATERIAL: Pared_estanteria
   - [Base Color]: RGB:0.8000,0.8000,0.8000
@@ -92,7 +92,7 @@ MATERIAL: Transparency
   - [Metallic]: VAL:0.0000
   - [Roughness]: VAL:0.6000
   - [Normal]: RGB:0.0000,0.0000,0.0000
-  - [Alpha]: VAL:0.0000
+  - [Alpha]: VAL:0.1500
 ..............................
 
 OBJETO: REF_Vidrio_Ventana_2

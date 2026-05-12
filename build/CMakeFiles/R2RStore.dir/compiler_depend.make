@@ -6,6 +6,7 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
   /home/arturo/Documentos/R2R_Store/src/Camera.h \
   /home/arturo/Documentos/R2R_Store/src/Mesh.h \
   /home/arturo/Documentos/R2R_Store/src/Model.h \
+  /home/arturo/Documentos/R2R_Store/src/ProceduralMesh.h \
   /home/arturo/Documentos/R2R_Store/src/Shader.h \
   /home/arturo/Documentos/R2R_Store/src/TextureManager.h \
   /home/arturo/Documentos/R2R_Store/src/TextureReport.h \
@@ -963,6 +964,12 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/assimp/material.inl:
 
+/usr/include/glm/detail/type_vec2.hpp:
+
+/usr/include/glm/detail/type_mat2x3.inl:
+
+/usr/include/c++/13/bits/memoryfwd.h:
+
 /usr/include/c++/13/bits/fs_fwd.h:
 
 /usr/include/glm/detail/type_mat2x2.hpp:
@@ -1003,13 +1010,13 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/bits/fs_path.h:
 
-/usr/include/x86_64-linux-gnu/bits/errno.h:
-
-/usr/include/c++/13/bits/stl_pair.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
 
 /usr/include/c++/13/bits/charconv.h:
+
+/usr/include/x86_64-linux-gnu/bits/errno.h:
+
+/usr/include/c++/13/bits/stl_pair.h:
 
 /usr/include/c++/13/cstdio:
 
@@ -1073,6 +1080,24 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/c++/13/tr1/poly_laguerre.tcc:
 
+/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
+
+/usr/include/assimp/color4.h:
+
+/usr/include/glm/ext/matrix_double2x4.hpp:
+
+/usr/include/c++/13/climits:
+
+/usr/include/glm/ext/matrix_float3x3_precision.hpp:
+
+/usr/include/assimp/camera.h:
+
+/usr/include/c++/13/bits/stl_raw_storage_iter.h:
+
 /usr/include/assimp/anim.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/mmintrin.h:
@@ -1092,24 +1117,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/glm/detail/type_mat4x3.hpp:
 
 /usr/include/c++/13/backward/binders.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
-
-/usr/include/assimp/color4.h:
-
-/usr/include/glm/ext/matrix_double2x4.hpp:
-
-/usr/include/c++/13/climits:
-
-/usr/include/glm/ext/matrix_float3x3_precision.hpp:
-
-/usr/include/assimp/camera.h:
-
-/usr/include/c++/13/bits/stl_raw_storage_iter.h:
 
 /usr/include/c++/13/bits/hash_bytes.h:
 
@@ -1179,6 +1186,24 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/glm/detail/type_mat3x4.hpp:
 
+/usr/include/glm/ext/vector_double3_precision.hpp:
+
+/usr/include/glm/ext/quaternion_common.hpp:
+
+/usr/include/c++/13/bits/basic_string.tcc:
+
+/usr/include/x86_64-linux-gnu/bits/floatn-common.h:
+
+/usr/include/c++/13/bits/requires_hosted.h:
+
+/usr/include/assimp/Importer.hpp:
+
+/usr/include/GL/gl.h:
+
+/usr/include/c++/13/bits/basic_ios.tcc:
+
+/usr/include/c++/13/pstl/execution_defs.h:
+
 /usr/include/glm/ext/vector_int3_sized.hpp:
 
 /usr/include/assert.h:
@@ -1190,6 +1215,14 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/assimp/postprocess.h:
 
 /home/arturo/Documentos/R2R_Store/src/TextureManager.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
+
+/usr/include/c++/13/bits/node_handle.h:
+
+/usr/include/assimp/config.h:
+
+/usr/include/GL/glu.h:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
@@ -1216,24 +1249,6 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/c++/13/bits/alloc_traits.h:
 
 /usr/include/c++/13/bits/concept_check.h:
-
-/usr/include/x86_64-linux-gnu/bits/floatn-common.h:
-
-/usr/include/c++/13/bits/requires_hosted.h:
-
-/usr/include/assimp/Importer.hpp:
-
-/usr/include/GL/gl.h:
-
-/usr/include/c++/13/bits/basic_ios.tcc:
-
-/usr/include/c++/13/pstl/execution_defs.h:
-
-/usr/include/glm/ext/vector_double3_precision.hpp:
-
-/usr/include/glm/ext/quaternion_common.hpp:
-
-/usr/include/c++/13/bits/basic_string.tcc:
 
 /home/arturo/Documentos/R2R_Store/examples/stb_image.h:
 
@@ -1301,19 +1316,13 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 
 /usr/include/glm/ext/matrix_float3x4.hpp:
 
+/home/arturo/Documentos/R2R_Store/src/ProceduralMesh.h:
+
 /usr/include/c++/13/bit:
 
 /usr/include/c++/13/bits/allocated_ptr.h:
 
 /usr/include/c++/13/clocale:
-
-/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
-
-/usr/include/c++/13/bits/node_handle.h:
-
-/usr/include/assimp/config.h:
-
-/usr/include/GL/glu.h:
 
 /usr/include/glm/ext/matrix_double4x3_precision.hpp:
 
@@ -1592,9 +1601,3 @@ CMakeFiles/R2RStore.dir/src/main.cpp.o: /home/arturo/Documentos/R2R_Store/src/ma
 /usr/include/c++/13/bits/uses_allocator_args.h:
 
 /usr/include/glm/detail/type_vec1.hpp:
-
-/usr/include/glm/detail/type_mat2x3.inl:
-
-/usr/include/c++/13/bits/memoryfwd.h:
-
-/usr/include/glm/detail/type_vec2.hpp:
