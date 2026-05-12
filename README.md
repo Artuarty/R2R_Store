@@ -2,8 +2,9 @@
 
 Entorno virtual interactivo de una tienda de conveniencia desarrollado con **OpenGL 3.3 Core Profile** y **C++17** como proyecto final de Computación grafica e interacción humano-computadora.
 
-**Asignatura:** Gráficas por Computadora
-**Autor:** Arturo Rodriguez Rodriguez
+**Asignatura:** Gráficas por Computadora  
+**Autor:** Arturo Rodriguez Rodriguez  
+**Video explicativo**: [Ver Video](https://drive.google.com/file/d/1Pcd8GKSvpgP_QvtqlIVaU91jFcARP3Xy/view?usp=drive_link)
 
 ---
 
