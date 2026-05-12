@@ -135,9 +135,15 @@ private:
                 indices.push_back(mesh->mFaces[i].mIndices[j]);
 
         // ── Material desde relatorio ──────────────────────────────────────────
-        Texture      diffTex;
-        MaterialData mat;
-        glm::vec3    solidColor(0.5f); // gris por defecto si no hay entrada en relatorio
+            Texture      diffTex;
+            MaterialData mat;
+            glm::vec3    solidColor(0.5f); // gris por defecto si no hay entrada en relatorio
+
+            // ====> AGREGAR ESTO PARA FIJAR UN ESTADO OPACO POR DEFECTO <====
+            mat.opacity     = 1.0f;  // Por defecto, opaco
+            mat.useTexAlpha = false; // No usar alpha de textura
+            mat.shininess   = 32.0f; // Valor de shininess genérico
+            mat.specular    = glm::vec3(0.1f); // Brillo genérico
 
         if (mesh->mMaterialIndex < scene->mNumMaterials) {
             aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
@@ -148,42 +154,43 @@ private:
 
             const MaterialConfig* cfg = LookupMaterial(report, objKey, matKey);
             if (cfg) {
+                // 1. Cargar texturas y colores base (mantener igual)
                 if (cfg->hasTexture) {
-                    // TEX: → cargar imagen (nombre ya sin prefijo)
-                    diffTex.id   = texMgr.Get(cfg->imageName);
+                    diffTex.id = texMgr.Get(cfg->imageName);
                     diffTex.name = cfg->imageName;
                 } else {
-                    // RGB: → color sólido; diffTex.id permanece 0
                     solidColor = glm::vec3(cfg->r, cfg->g, cfg->b);
                 }
 
-                // Roughness → shininess (cuadrático inverso)
-                float rgh = glm::clamp(cfg->roughness, 0.0f, 1.0f);
-                mat.shininess = glm::max(1.0f, (1.0f - rgh) * (1.0f - rgh) * 128.0f);
+                // 2. Identificar si es un material de tipo VIDRIO
+                bool isGlass = (matKey.find("glass") != std::string::npos ||
+                                matKey.find("transparency") != std::string::npos ||
+                                matKey.find("vidrio") != std::string::npos);
 
-                // Metallic → intensidad especular
-                float met = glm::clamp(cfg->metallic, 0.0f, 1.0f);
-                mat.specular = glm::vec3(0.04f + met * 0.56f);
+                // 3. LÓGICA DE TRANSPARENCIA REFORZADA
+                mat.useTexAlpha = false; 
+                mat.opacity = 1.0f;
 
-                // Transparencia desde [Alpha]
-                // useTexAlpha SOLO se activa si:
-                //   a) el relatorio marca alphaFromTex (TEX: en Alpha)
-                //   b) el nombre del material contiene "glass" o "transparency"
-                //   c) la textura cargada realmente tiene canal alpha (RGBA o LA)
-                // Esto evita que materiales opacos con alpha en su textura
-                // (estructura exterior, paredes) terminen en el pase transparente.
-                bool isGlassMat = (matKey.find("glass")        != std::string::npos ||
-                                   matKey.find("transparency")  != std::string::npos ||
-                                   matKey.find("transparent")   != std::string::npos);
-
-                if (cfg->alphaFromTex && isGlassMat && diffTex.id != 0) {
+                if (isGlass) {
+                    // Si es vidrio, forzamos transparencia
+                    if (cfg->alphaFromTex && diffTex.id != 0) {
+                        mat.useTexAlpha = texMgr.HasAlpha(cfg->imageName);
+                    } else {
+                        // Si el valor es muy bajo en Blender (0.0), ponemos 0.15 para que se vea el cristal
+                        mat.opacity = (cfg->opacity < 0.01f) ? 0.15f : cfg->opacity;
+                    }
+                } 
+                else if (cfg->alphaFromTex && diffTex.id != 0) {
+                    // Si NO es vidrio pero tiene textura en Alpha (ej. un logo con transparencia)
+                    // Solo activamos useTexAlpha si la imagen REALMENTE tiene canal alfa
                     mat.useTexAlpha = texMgr.HasAlpha(cfg->imageName);
-                    mat.opacity     = 1.0f;
-                } else if (cfg->opacity < 0.5f) {
-                    // VAL:0.0 = vidrio en Blender → tinte de vidrio sutil en OpenGL
-                    mat.opacity = 0.15f;
-                } else {
-                    mat.opacity = cfg->opacity;
+                    
+                    // Si la textura NO tiene alpha real, forzamos opacidad total
+                    if (!mat.useTexAlpha) mat.opacity = 1.0f;
+                } 
+                else {
+                    // Es un objeto sólido (como tus paredes)
+                    mat.opacity = 1.0f;
                 }
             }
         }
