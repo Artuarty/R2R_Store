@@ -40,7 +40,7 @@ out vec4 FragColor;
 
 uniform Material   material;
 uniform DirLight   dirLight;
-uniform PointLight pointLights[2];
+uniform PointLight pointLights[3];
 uniform vec3       viewPos;
 uniform sampler2D  texture_diffuse1;
 uniform vec3       uBaseColor;        // color sólido para materiales sin textura
@@ -48,7 +48,8 @@ uniform bool       uUseTexAlpha;      // true → usar texture.a como alpha del 
 
 // Animaciones de iluminación
 uniform float lampIntensity;      // ANIM_08: 0.85 + variación senoidal
-uniform float emissiveIntensity;  // ANIM_LETRERO: batimiento de ondas
+uniform float emissiveIntensity;  // ANIM_LETRERO / café: intensidad del emisivo animado
+uniform vec3  uEmissiveColor;     // color del emisivo (R2R=azul, café=marrón cálido)
 uniform float alphaOverride;      // ANIM_07: -1 = usar material.opacity
 
 // ── Funciones Blinn-Phong ─────────────────────────────────────────────────────
@@ -97,14 +98,14 @@ void main()
         : uBaseColor;
 
     vec3 result = CalcDirLight(dirLight, norm, viewDir, albedo);
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir, albedo);
 
     // Emisivo propio del material (Ke del MTL)
     result += material.emissive;
 
-    // ANIM_LETRERO: emisivo animado superpuesto
-    result += emissiveIntensity * vec3(0.31, 0.76, 0.97);
+    // Emisivo animado: color configurable (R2R=azul, café=marrón cálido)
+    result += emissiveIntensity * uEmissiveColor;
 
     // Alpha final:
     //  1. alphaOverride activo (ANIM_07 bolsa) → usa ese valor
