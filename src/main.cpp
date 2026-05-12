@@ -39,6 +39,7 @@
 #include "TextureManager.h"
 #include "TextureReport.h"
 #include "Model.h"
+#include "ProceduralMesh.h"
 
 namespace fs = std::filesystem;
 
@@ -325,6 +326,48 @@ int main(int argc, char* argv[])
     Model mdlLogoEntrada(mdl+"REF_Logo_Tienda_Entrada_Principal.obj",texMgr,texReport);
     Model mdlLogoPoste  (mdl+"REF_Logo_poste_R2R.obj",              texMgr,texReport);
 
+    // ── Objetos procedurales (geometría generada por código) ─────────────────
+    // 7 objetos únicos modelados con VAO/VBO/EBO sin cargar ningún OBJ externo.
+    // Centrados en el origen; se posicionan con glm::translate en el draw.
+    // Coordenadas en OBJ world space: Y=arriba, Z=-profundidad_Blender.
+
+    // 1. Caja de cereal — Estante_1 (pared derecha, pasillo interior)
+    //    76mm × 220mm × 46mm — caja de cereal estándar vista de frente
+    Mesh procCereal = makeBox(0.038f, 0.110f, 0.023f,
+                              glm::vec3(0.92f, 0.48f, 0.08f)); // naranja
+
+    // 2. Lata de refresco — Rack_Bebidas (pared izquierda)
+    //    r=34mm, h=122mm — lata 355ml estándar
+    Mesh procLata = makeCylinder(0.034f, 0.122f, 16,
+                                 glm::vec3(0.82f, 0.08f, 0.10f)); // rojo
+
+    // 3. Botella de agua — Estante_2 (pasillo central)
+    //    r=25mm, h=220mm — botella PET 500ml
+    Mesh procBotella = makeCylinder(0.025f, 0.220f, 14,
+                                    glm::vec3(0.68f, 0.87f, 0.95f)); // azul claro
+
+    // 4. Bolsa de snacks — Estante_1 (junto a la caja de cereal)
+    //    140mm × 200mm × 40mm — bolsa de papas fritas
+    Mesh procSnack = makeBox(0.070f, 0.100f, 0.020f,
+                             glm::vec3(0.95f, 0.82f, 0.08f)); // amarillo
+
+    // 5. Felpudo de entrada — suelo en la puerta principal
+    //    1000mm × 16mm × 500mm — felpudo industrial de tienda
+    Mesh procFelpudo = makeBox(0.500f, 0.008f, 0.250f,
+                               glm::vec3(0.22f, 0.08f, 0.08f),  // rojo oscuro
+                               16.0f, glm::vec3(0.05f));
+
+    // 6. Cartel de oferta — señalética luminosa cerca de los estantes
+    //    350mm × 250mm × 10mm — cartel de precio/promoción con glow animado
+    Mesh procCartel = makeBox(0.175f, 0.125f, 0.005f,
+                              glm::vec3(0.95f, 0.88f, 0.05f),   // amarillo brillante
+                              8.0f, glm::vec3(0.60f));
+
+    // 7. Revistas/periódicos — mostrador de la caja registradora
+    //    210mm × 40mm × 280mm — pila de revistas A4 apiladas
+    Mesh procRevistas = makeBox(0.105f, 0.020f, 0.140f,
+                                glm::vec3(0.90f, 0.90f, 0.88f)); // blanco/gris
+
     // ── Proyección ────────────────────────────────────────────────────────────
     glm::mat4 proj = glm::perspective(
         glm::radians(camera.GetZoom()),
@@ -570,6 +613,40 @@ int main(int argc, char* argv[])
         // PASS 1 — OPACOS: depth R/W, blend OFF
         // ═════════════════════════════════════════════════════════════════════
         renderScene(false);
+
+        // ── Objetos procedurales (opacos, dibujados en PASS 1) ───────────────
+        // Lambda: configura model+emissive y despacha el Mesh directamente.
+        // emissiveIntensity=0 para opacos sin glow; el cartel tiene pulsación.
+        {
+            auto drawProc = [&](Mesh& m, glm::vec3 pos,
+                                float em = 0.0f,
+                                glm::vec3 emColor = glm::vec3(0.0f))
+            {
+                shader.setMat4 ("model",             glm::translate(glm::mat4(1.0f), pos));
+                shader.setFloat("emissiveIntensity", em);
+                shader.setFloat("alphaOverride",     -1.0f);
+                shader.setVec3 ("uEmissiveColor",    emColor);
+                m.Draw(shader);
+            };
+
+            // 1. Caja de cereal — Estante_1, primer estante desde el suelo
+            drawProc(procCereal,   glm::vec3( 2.30f, 0.90f, -1.90f));
+            // 2. Lata de refresco — Rack_Bebidas, nivel medio
+            drawProc(procLata,     glm::vec3(-3.50f, 2.20f,  0.80f));
+            // 3. Botella de agua — Estante_2, segundo nivel
+            drawProc(procBotella,  glm::vec3( 2.10f, 1.18f,  0.65f));
+            // 4. Bolsa de snacks — Estante_1, junto a cereal
+            drawProc(procSnack,    glm::vec3( 2.55f, 0.90f, -1.90f));
+            // 5. Felpudo — suelo frente a la puerta de entrada
+            drawProc(procFelpudo,  glm::vec3(-0.60f, 0.67f,  2.75f));
+            // 6. Cartel de oferta — colgado frente a los estantes (pulsación senoidal)
+            //    E(t) = 0.30 + 0.20·sin(1.5t) → variación suave de glow
+            float cartelEm = 0.30f + 0.20f * sinf(1.5f * t);
+            drawProc(procCartel,   glm::vec3( 1.50f, 1.65f, -0.50f),
+                     cartelEm, glm::vec3(0.95f, 0.88f, 0.05f));
+            // 7. Revistas/periódicos — encima del mostrador de caja
+            drawProc(procRevistas, glm::vec3(-2.80f, 1.50f,  0.25f));
+        }
 
         // ═════════════════════════════════════════════════════════════════════
         // PASS 2 — TRANSPARENTES: depth lectura-only, blend ON
