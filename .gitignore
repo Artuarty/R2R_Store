@@ -1,4 +1,6 @@
 
+/examples
+/resultados
 
 # Archivos grandes (> 100 MB bloqueados por GitHub)
 *.blend1
